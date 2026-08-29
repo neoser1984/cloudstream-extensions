@@ -1,0 +1,65 @@
+[
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizipal1578.com&sz=%size%",
+        "fileHash": "sha256-ae89a7a2d3225fe3ccc3d122cbb1be9d58cd738f747cc0d7be5a9e353605ffab",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 19683,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "DiziPal1578",
+        "description": "DiziPal (1578 aynas\u0131) - reklams\u0131z, h\u0131zl\u0131 dizi ve film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziPal1578.cs3",
+        "name": "DiziPal1578"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizipal2121.com&sz=%size%",
+        "fileHash": "sha256-1f72900fd879c5caa41f81f267fed84eea7eb8f2cdeb29d480eb6b51207f79c6",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 19687,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "DiziPal2121",
+        "description": "DiziPal (2121 aynas\u0131) - reklams\u0131z, h\u0131zl\u0131 dizi ve film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziPal2121.cs3",
+        "name": "DiziPal2121"
+    },
+    {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=selcukflix.co&sz=%size%",
+        "fileHash": "sha256-f4e57381a6a7b5fd9dc24ba6d73f8fc2bd31fad8eede28e3e020d359f3f9a28f",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 22309,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "SelcukFlix",
+        "description": "SelcukFlix - reklams\u0131z, h\u0131zl\u0131 yabanc\u0131 dizi ve film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/SelcukFlix.cs3",
+        "name": "SelcukFlix"
+    }
+]
