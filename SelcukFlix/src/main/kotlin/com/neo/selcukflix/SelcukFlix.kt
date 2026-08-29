@@ -203,7 +203,10 @@ class SelcukFlix : MainAPI() {
                         val epNo = ep.intOrNull("episode_no")
                         val epSubtitle = ep.textOrNull("episode_subtitle")
                         val epText     = ep.textOrNull("episode_text")
-                        val epName     = if (!epSubtitle.isNullOrBlank() && epSubtitle != epText) epSubtitle else null
+                        val epName     = (if (!epSubtitle.isNullOrBlank() && epSubtitle != epText) epSubtitle else null)
+                            ?: listOfNotNull(seasonNo?.let { "$it. Sezon" }, epNo?.let { "$it. Bölüm" })
+                                .joinToString(" ")
+                                .ifBlank { "Bölüm" }
 
                         episodes.add(
                             newEpisode(abs(slug)) {
@@ -287,14 +290,15 @@ class SelcukFlix : MainAPI() {
 
             if (m3u != null) {
                 callback.invoke(
-                    ExtractorLink(
-                        source  = this.name,
-                        name    = if (label.isNotBlank()) "${this.name} $label" else this.name,
-                        url     = m3u,
-                        referer = iframeUrl,
-                        quality = Qualities.Unknown.value,
-                        isM3u8  = true
-                    )
+                    newExtractorLink(
+                        source = this.name,
+                        name   = if (label.isNotBlank()) "${this.name} $label" else this.name,
+                        url    = m3u,
+                        type   = ExtractorLinkType.M3U8
+                    ) {
+                        this.referer = iframeUrl
+                        this.quality = Qualities.Unknown.value
+                    }
                 )
                 true
             } else {
