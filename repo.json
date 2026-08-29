@@ -1,0 +1,8 @@
+{
+    "name": "NeO Eklenti Deposu",
+    "description": "Kişisel CloudStream eklenti deposu (DiziPal 2121, DiziPal 1578, SelcukFlix)",
+    "manifestVersion": 1,
+    "pluginLists": [
+      "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/plugins.json"
+    ]
+}
