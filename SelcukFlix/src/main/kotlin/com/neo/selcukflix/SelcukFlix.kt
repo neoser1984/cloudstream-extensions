@@ -78,8 +78,8 @@ class SelcukFlix : MainAPI() {
     private fun JsonNode.intOrNull(field: String): Int? =
         this.path(field).takeIf { it.isNumber }?.asInt()
 
-    private fun JsonNode.ratingOrNull(): Int? =
-        this.path("imdb_point").takeIf { it.isNumber }?.let { (it.asDouble() * 10).toInt() }
+    private fun JsonNode.scoreOrNull(): Score? =
+        this.path("imdb_point").takeIf { it.isNumber }?.let { Score.from10(it.asDouble()) }
 
     private fun JsonNode.tagsOrNull(): List<String>? =
         this.textOrNull("categories")?.split(",")?.map { it.trim() }?.filter { it.isNotBlank() }
@@ -168,7 +168,7 @@ class SelcukFlix : MainAPI() {
             val poster = contentItem.textOrNull("poster_url") ?: contentItem.textOrNull("face_url")
             val plot   = contentItem.textOrNull("description")
             val year   = contentItem.intOrNull("release_year")
-            val rating = contentItem.ratingOrNull()
+            val score  = contentItem.scoreOrNull()
             val tags   = contentItem.tagsOrNull()
             val duration = contentItem.intOrNull("total_minutes")
 
@@ -176,7 +176,7 @@ class SelcukFlix : MainAPI() {
                 this.posterUrl = poster
                 this.plot      = plot
                 this.year      = year
-                this.rating    = rating
+                this.score     = score
                 this.tags      = tags
                 this.duration  = duration
             }
@@ -187,7 +187,7 @@ class SelcukFlix : MainAPI() {
             val poster = contentItem.textOrNull("poster_url") ?: contentItem.textOrNull("face_url")
             val plot   = contentItem.textOrNull("series_description_content")
                 ?: contentItem.textOrNull("description")
-            val rating = contentItem.ratingOrNull()
+            val score  = contentItem.scoreOrNull()
             val tags   = contentItem.tagsOrNull()
 
             val episodes = mutableListOf<Episode>()
@@ -223,7 +223,7 @@ class SelcukFlix : MainAPI() {
             newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
                 this.plot      = plot
-                this.rating    = rating
+                this.score     = score
                 this.tags      = tags
             }
         }
