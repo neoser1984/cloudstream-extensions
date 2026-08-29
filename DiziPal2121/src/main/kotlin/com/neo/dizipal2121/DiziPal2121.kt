@@ -171,14 +171,15 @@ class DiziPal2121 : MainAPI() {
         }
 
         callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = m3uLink,
-                referer = "${mainUrl}/",
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
-            )
+            newExtractorLink(
+                source = this.name,
+                name   = this.name,
+                url    = m3uLink,
+                type   = ExtractorLinkType.M3U8
+            ) {
+                this.referer = "${mainUrl}/"
+                this.quality = Qualities.Unknown.value
+            }
         )
 
         return true
