@@ -1,0 +1,28 @@
+// ! Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
+
+package com.neo.dizilla
+
+import com.fasterxml.jackson.annotation.JsonProperty
+
+data class SearchResult(
+    @JsonProperty("response") val response: String?
+)
+
+data class SearchData(
+    @JsonProperty("state")   val state: Boolean?           = null,
+    @JsonProperty("result")  val result: List<SearchItem>? = arrayListOf(),
+    @JsonProperty("message") val message: String?          = null,
+    @JsonProperty("html")    val html: String?             = null
+)
+
+data class SearchItem(
+    @JsonProperty("used_slug")         val slug: String?   = null,
+    @JsonProperty("object_name")       val title: String?  = null,
+    @JsonProperty("title")             val backupTitle: String? = null,
+    @JsonProperty("original_title")    val originalTitle: String? = null,
+    @JsonProperty("object_poster_url") val poster: String? = null,
+    @JsonProperty("poster_url")        val posterUrl: String? = null,
+    @JsonProperty("square_url")        val squareUrl: String? = null,
+    @JsonProperty("face_url")          val faceUrl: String? = null,
+    @JsonProperty("back_url")          val backUrl: String? = null,
+)
