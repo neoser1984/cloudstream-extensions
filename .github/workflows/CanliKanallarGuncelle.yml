@@ -22,14 +22,33 @@ jobs:
       - name: Kanal Listesini Güncelle
         run: python3 scripts/canli_kanallar_guncelle.py
 
-      - name: Değişiklik Varsa Commit'le
+      - name: Değişiklik Varsa Commit'le (çakışmaya karşı yeniden dener)
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add CanliKanallar.m3u
-          if git diff --cached --quiet; then
-            echo "Değişiklik yok, commit atlanıyor."
-            exit 0
-          fi
-          git commit -m "canlıkanallar: onureroz.com listesi otomatik güncellendi"
-          git push
+
+          for i in 1 2 3 4 5; do
+            git add CanliKanallar.m3u
+            if git diff --cached --quiet; then
+              echo "Değişiklik yok, commit atlanıyor."
+              exit 0
+            fi
+
+            git commit -m "canlıkanallar: onureroz.com listesi otomatik güncellendi"
+
+            if git push; then
+              echo "Push başarılı."
+              exit 0
+            fi
+
+            echo "Push reddedildi (deneme ${i}/5) — muhtemelen main'e o sırada başka bir commit geldi."
+            echo "Yerel commit geri alınıp uzak main'e göre sıfırlanıyor, sonra tekrar denenecek..."
+            git reset --soft HEAD~1
+            git fetch origin main
+            git reset --hard origin/main
+            python3 scripts/canli_kanallar_guncelle.py
+            sleep $((i * 5))
+          done
+
+          echo "5 denemeden sonra push başarısız oldu, vazgeçiliyor." >&2
+          exit 1
