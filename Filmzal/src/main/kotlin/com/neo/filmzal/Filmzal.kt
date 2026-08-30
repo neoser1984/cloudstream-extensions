@@ -185,9 +185,10 @@ class Filmzal : MainAPI() {
         val rawTitle = document.selectFirst("h1")?.text()?.trim() ?: return null
         val title    = rawTitle.replace(yearSuffixRegex, "").trim().ifBlank { rawTitle }
 
-        val poster = fixUrlNull(document.selectFirst(".ui.image img")?.let {
-            it.attr("data-src").ifBlank { it.attr("src") }
-        })
+        val posterEl = document.selectFirst(".ui.image img")
+        val poster = if (posterEl != null) {
+            fixUrlNull(posterEl.attr("data-src").ifBlank { posterEl.attr("src") })
+        } else null
 
         val infoMap = mutableMapOf<String, String>()
         document.selectFirst("table.ui.unstackable.single.line.celled.table")?.select("td")?.forEach { td ->
