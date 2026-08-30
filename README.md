@@ -1,6 +1,6 @@
 # NeO CloudStream Eklentileri
 
-Kişisel CloudStream eklenti deposu. Şu an **23 eklenti** içerir:
+Kişisel CloudStream eklenti deposu. Şu an **29 eklenti** içerir:
 
 | Eklenti | Site | Tür |
 |---|---|---|
@@ -8,7 +8,9 @@ Kişisel CloudStream eklenti deposu. Şu an **23 eklenti** içerir:
 | **Canlı Kanallar** | (GitHub üzerinden M3U playlist) | Canlı TV |
 | **DDizi** | ddizi.im | Dizi |
 | **DiziAsya** | diziasya.com | Dizi + Film + Anime |
+| **DiziBox** | dizibox.live | Dizi |
 | **DiziGom** | dizigom.biz | Dizi |
+| **Dizilla** | dizilla.now | Dizi |
 | **DiziKorea** | dizikorea3.com | Dizi + Film |
 | **DiziMom** | dizimom.food | Dizi |
 | **DiziPal 1578** | dizipal1578.com | Dizi + Film |
@@ -21,8 +23,12 @@ Kişisel CloudStream eklenti deposu. Şu an **23 eklenti** içerir:
 | **HDFilmCehennemi** | hdfilmcehennemi.nl | Dizi + Film |
 | **HDFilmDiziIzle** | hdfilmdiziizle.com | Dizi + Film |
 | **HDFilmizle** | hdfilmizle.vip | Dizi + Film |
+| **InatBox** | (dinamik adres çözümleme) | Film + Dizi + Canlı |
 | **KoreFilmizle** | korefilmizle.com | Dizi + Film |
+| **RecTV** | rectv.org.tr | Film + Dizi + Canlı |
 | **SelcukFlix** | selcukflix.co | Dizi + Film |
+| **SetFilmIzle** | setfilmizle.uk | Dizi + Film |
+| **SezonlukDizi** | sezonlukdizi.cc | Dizi |
 | **TrDiziIzle** | trdiziizle.tv | Dizi |
 | **TvDiziler** | tvdiziler.tv | Dizi |
 | **WebDramaTurkey** | webdramaturkey2.com | Dizi + Film |
@@ -132,6 +138,10 @@ settings.gradle.kts             ← hangi klasörlerin eklenti olduğunu bulur
 - **WebDramaTurkey**: video oynatıcı adresi sitede JavaScript ile istemci tarafında üretiliyor (statik HTML'de bulunmuyor), bu yüzden video linki genelde bulunamıyor. Dizi/film gezinme, arama ve bölüm listesi normal çalışıyor.
 - **AsyaWatch**: video kaynağı sitenin kendi barındırdığı, Cloudflare korumalı bir adrese işaret ediyor; ağ koşullarına göre video her zaman açılmayabilir.
 - **Canlı Kanallar**: kanal linkleri üçüncü taraf, herkese açık kaynaklardan derlenmiştir; bu linkler bizim kontrolümüzde değildir ve zaman zaman kesilebilir/değişebilir. Bir kanal açılmıyorsa `CanliKanallar.m3u` içindeki linki güncel bir kaynakla değiştirmek gerekir.
+
+## 🙏 Teşekkür / Kaynak
+
+Bu depodaki [InatBox, RecTV, DiziBox, SezonlukDizi, Dizilla, SetFilmIzle] eklentileri [murattunc05/cloudstream-turkish](https://github.com/murattunc05/cloudstream-turkish) (GPLv3, @keyiflerolsun'un Kekik-cloudstream projesine dayanıyor) kaynağından uyarlanmıştır.
 
 ## ⚠️ Not
 
