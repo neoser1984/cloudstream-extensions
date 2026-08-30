@@ -464,3 +464,11 @@ https://cdn-globecast.akamaized.net/live/eds/saudi_sunnah/hls_roku/saudi_sunnah-
 http://176.65.146.171:9981/stream/channelid/835819132?profile=htsp
 #EXTINF:-1 Yedek1="https://rkhubpaomb.turknet.ercdn.net/fwjkgpasof/tv8bucuk/tv8bucuk_1080p.m3u8" Yedek2="https://tv8.daioncdn.net/tv8bucuk/tv8bucuk_1080p.m3u8?app=tv8bucuk_web&ce=3" tvg-id="TV8,5 HD.tr" tvg-logo="https://static.wikia.nocookie.net/logopedia/images/1/1f/TV8.5_Logosu.png/revision/latest?cb=20170827103605" group-title="ULUSAL",TV 8bucuk
 https://rkhubpaomb.turknet.ercdn.net/fwjkgpasof/tv8bucuk/tv8bucuk_1080p.m3u8
+#EXTINF:-1,TRT AVAZ
+https://tv-trtavaz.medya.trt.com.tr/master.m3u8
+#EXTINF:-1,TRT KURDi
+https://tv-trtkurdi.medya.trt.com.tr/master.m3u8
+#EXTINF:-1,TRT ARABi
+https://tv-trtarabi.medya.trt.com.tr/master.m3u8
+#EXTINF:1 tvg-id="" tvg-logo="http://assets.tvcdn.net/15e32d50-4058-4fa6-a6e2-3e1dbc35c70c.jpeg" group-title="ÇOCUK",Zarok TV Kürtçe
+https://zindikurmanci.zaroktv.com.tr/hls/stream.m3u8
