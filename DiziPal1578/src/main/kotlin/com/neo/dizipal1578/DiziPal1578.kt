@@ -29,78 +29,68 @@ class DiziPal1578 : MainAPI() {
     // ! CloudFlare bypass
     override var sequentialMainPage = true
 
+    // ! 2026-08 civarında site tamamen yeni bir şablona geçti: eski "/diziler", "/tur/*",
+    // ! "/koleksiyon/*" yolları artık yok. Yeni yapı: "/yabanci-dizi-izle", "/hd-film-izle",
+    // ! "/anime", "/kanal/{platform}". Dizi detay: "/series/{slug}", film detay: "/movies/{slug}".
     override val mainPage = mainPageOf(
-        "${mainUrl}/diziler/son-bolumler"                          to "Son Bölümler",
-        "${mainUrl}/diziler"                                       to "Yeni Diziler",
-        "${mainUrl}/filmler"                                       to "Yeni Filmler",
-        "${mainUrl}/koleksiyon/netflix"                            to "Netflix",
-        "${mainUrl}/koleksiyon/exxen"                              to "Exxen",
-        "${mainUrl}/koleksiyon/blutv"                              to "BluTV",
-        "${mainUrl}/koleksiyon/disney"                             to "Disney+",
-        "${mainUrl}/koleksiyon/amazon-prime"                       to "Amazon Prime",
-        "${mainUrl}/tur/bilimkurgu"                                to "Bilimkurgu Filmleri",
-        "${mainUrl}/tur/komedi"                                    to "Komedi Filmleri",
-        "${mainUrl}/tur/belgesel"                                  to "Belgesel Filmleri",
+        "${mainUrl}/yabanci-dizi-izle"                             to "Diziler",
+        "${mainUrl}/hd-film-izle"                                  to "Filmler",
+        "${mainUrl}/anime"                                         to "Anime",
+        "${mainUrl}/kanal/netflix"                                 to "Netflix",
+        "${mainUrl}/kanal/exxen"                                   to "Exxen",
+        "${mainUrl}/kanal/disney"                                  to "Disney+",
+        "${mainUrl}/kanal/amazon"                                  to "Amazon Prime",
+        "${mainUrl}/kanal/max"                                     to "Max",
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(request.data).document
-        val home     = if (request.data.contains("/diziler/son-bolumler")) {
-            document.select("div.episode-item").mapNotNull { it.sonBolumler() }
-        } else {
-            document.select("article.type2 ul li").mapNotNull { it.diziler() }
-        }
+        val home     = document.select("a[href*='/series/'], a[href*='/movies/']").mapNotNull { it.toCardResult() }
 
         return newHomePageResponse(request.name, home, hasNext = false)
     }
 
-    private fun Element.sonBolumler(): SearchResponse? {
-        val name    = this.selectFirst("div.name")?.text() ?: return null
-        val episode = this.selectFirst("div.episode")?.text()?.trim()?.replace(". Sezon ", "x")?.replace(". Bölüm", "") ?: return null
-        val title   = "$name $episode"
+    // ! Kart yapısı: <a href=".../series/slug veya .../movies/slug"><div class=img><img></div><h2>Başlık</h2></a>
+    private fun Element.toCardResult(): SearchResponse? {
+        val href  = fixUrlNull(this.attr("href")) ?: return null
+        val title = this.selectFirst("h2")?.text()?.trim() ?: return null
+        val img   = this.selectFirst("img")
+        val posterUrl = fixUrlNull(
+            img?.attr("data-src")?.takeIf { it.isNotBlank() } ?: img?.attr("src")
+        )
 
-        val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
-        val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
-
-        return newTvSeriesSearchResponse(title, href.substringBefore("/sezon"), TvType.TvSeries) {
-            this.posterUrl = posterUrl
-        }
-    }
-
-    private fun Element.diziler(): SearchResponse? {
-        val title     = this.selectFirst("span.title")?.text() ?: return null
-        val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
-        val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
-
-        return newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
-    }
-
-    private fun SearchItem.toPostSearchResult(): SearchResponse {
-        val title     = this.title
-        val href      = "${mainUrl}${this.url}"
-        val posterUrl = this.poster
-
-        return if (this.type == "series") {
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
-        } else {
+        return if (href.contains("/movies/")) {
             newMovieSearchResponse(title, href, TvType.Movie) { this.posterUrl = posterUrl }
+        } else {
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
         }
     }
 
+    private fun BgSearchItem.toSearchResult(): SearchResponse? {
+        val slug  = this.usedSlug ?: return null
+        val title = this.objectName ?: return null
+        val href  = fixUrl(slug)
+        val poster = this.posterUrl ?: this.faceUrl
+
+        return if (slug.startsWith("movies/")) {
+            newMovieSearchResponse(title, href, TvType.Movie) { this.posterUrl = poster }
+        } else {
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = poster }
+        }
+    }
+
+    // ! Yeni arama uç noktası: POST /bg/searchcontent (düz JSON, şifresiz) -> {"data":{"result":[...]}}
+    // ! (Eski "/api/search-autocomplete" artık 404 dönüyordu.)
     override suspend fun search(query: String): List<SearchResponse> {
         return try {
             val responseRaw = app.post(
-                "${mainUrl}/api/search-autocomplete",
-                headers = mapOf(
-                    "Accept"           to "application/json, text/javascript, */*; q=0.01",
-                    "X-Requested-With" to "XMLHttpRequest"
-                ),
-                referer = "${mainUrl}/",
-                data    = mapOf("query" to query)
-            )
+                "${mainUrl}/bg/searchcontent",
+                data    = mapOf("searchterm" to query),
+                referer = "${mainUrl}/"
+            ).text
 
-            val searchItemsMap = jacksonObjectMapper().readValue<Map<String, SearchItem>>(responseRaw.text)
-            searchItemsMap.values.map { it.toPostSearchResult() }
+            val parsed = jacksonObjectMapper().readValue<BgSearchResponse>(responseRaw)
+            parsed.data?.result?.mapNotNull { it.toSearchResult() } ?: emptyList()
         } catch (e: Exception) {
             Log.d("DZP1578", "search hatası » ${e.message}")
             emptyList()
@@ -112,46 +102,34 @@ class DiziPal1578 : MainAPI() {
     override suspend fun load(url: String): LoadResponse? {
         val document = app.get(url).document
 
-        val poster      = fixUrlNull(document.selectFirst("[property='og:image']")?.attr("content"))
-        val year        = document.selectXpath("//div[text()='Yapım Yılı']//following-sibling::div").text().trim().toIntOrNull()
-        val description = document.selectFirst("div.summary p")?.text()?.trim()
-        val tags        = document.selectXpath("//div[text()='Türler']//following-sibling::div").text().trim().split(" ").map { it.trim() }
-        val score       = Score.from10(document.selectXpath("//div[text()='IMDB Puanı']//following-sibling::div").text().trim())
-        val duration    = Regex("(\\d+)").find(document.selectXpath("//div[text()='Ortalama Süre']//following-sibling::div").text())?.value?.toIntOrNull()
+        val title       = document.selectFirst("h1")?.text()?.trim() ?: return null
+        val poster      = fixUrlNull(document.selectFirst("img[src*='cdnhipter']")?.attr("src"))
+        val description = document.selectFirst("meta[name='description']")?.attr("content")?.trim()
 
-        if (url.contains("/dizi/")) {
-            val title    = document.selectFirst("div.cover h5")?.text() ?: return null
-            val episodes = document.select("div.episode-item").mapNotNull {
-                val epName    = it.selectFirst("div.name")?.text()?.trim() ?: return@mapNotNull null
-                val epHref    = fixUrlNull(it.selectFirst("a")?.attr("href")) ?: return@mapNotNull null
-                val epEpisode = it.selectFirst("div.episode")?.text()?.trim()?.split(" ")?.get(2)?.replace(".", "")?.toIntOrNull()
-                val epSeason  = it.selectFirst("div.episode")?.text()?.trim()?.split(" ")?.get(0)?.replace(".", "")?.toIntOrNull()
+        return if (url.contains("/series/")) {
+            val episodes = document.select("a[href*='/bolum/']").mapNotNull {
+                val epHref = fixUrlNull(it.attr("href")) ?: return@mapNotNull null
+                val m      = Regex("""-(\d+)x(\d+)""").find(epHref) ?: return@mapNotNull null
+                val season = m.groupValues[1].toIntOrNull()
+                val episode = m.groupValues[2].toIntOrNull()
 
                 newEpisode(epHref) {
-                    this.name    = epName
-                    this.episode = epEpisode
-                    this.season  = epSeason
+                    this.name    = if (season != null && episode != null) "${season}. Sezon ${episode}. Bölüm" else null
+                    this.season  = season
+                    this.episode = episode
                 }
-            }
+            }.distinctBy { it.data }
 
-            return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
+            if (episodes.isEmpty()) return null
+
+            newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
                 this.posterUrl = poster
-                this.year      = year
                 this.plot      = description
-                this.tags      = tags
-                this.score     = score
-                this.duration  = duration
             }
         } else {
-            val title = document.selectXpath("//div[@class='g-title'][2]/div").text().trim()
-
-            return newMovieLoadResponse(title, url, TvType.Movie, url) {
+            newMovieLoadResponse(title, url, TvType.Movie, url) {
                 this.posterUrl = poster
-                this.year      = year
                 this.plot      = description
-                this.tags      = tags
-                this.score     = score
-                this.duration  = duration
             }
         }
     }
@@ -301,22 +279,29 @@ class DiziPal1578 : MainAPI() {
 
     companion object {
         // ! dizipal1578.com'un app-dizipals.js paketinde sabit gömülü olan parola.
-        private const val RM_K_PASSPHRASE = "3hPn4uCjTVtfYWcjIcoJQ4cL1WWk1qxXI39egLYOmNv6IblA7eKJz68uU3eLzux1biZLCms0quEjTYniGv5z1JcKbNIsDQFSeIZOBZJz4is6pD7UyWDggWWzTLBQbHcQFpBQdClnuQaMNUHtLHTpzCvZy33p6I7wFBvL4fnXBYH84aUIyWGTRvM2G5cfoNf4705tO2k"
+        // ! 2026-08 yenilemesiyle sona bir karakter ("v") eklendi - site JS bundle'ından
+        // ! çalışma zamanında yeniden doğrulandı.
+        private const val RM_K_PASSPHRASE = "3hPn4uCjTVtfYWcjIcoJQ4cL1WWk1qxXI39egLYOmNv6IblA7eKJz68uU3eLzux1biZLCms0quEjTYniGv5z1JcKbNIsDQFSeIZOBZJz4is6pD7UyWDggWWzTLBQbHcQFpBQdClnuQaMNUHtLHTpzCvZy33p6I7wFBvL4fnXBYH84aUIyWGTRvM2G5cfoNf4705tO2kv"
     }
 }
 
-data class SearchItem(
-    @JsonProperty("id") val id: String,
-    @JsonProperty("title") val title: String,
-    @JsonProperty("tr_title") val trTitle: String,
-    @JsonProperty("poster") val poster: String,
-    @JsonProperty("genres") val genres: String,
-    @JsonProperty("imdb") val imdb: String,
-    @JsonProperty("duration") val duration: String,
-    @JsonProperty("year") val year: String,
-    @JsonProperty("view") val view: Int,
-    @JsonProperty("type") val type: String = "defaultType",
-    @JsonProperty("url") val url: String
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class BgSearchResponse(
+    @JsonProperty("data") val data: BgSearchData? = null
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class BgSearchData(
+    @JsonProperty("result") val result: List<BgSearchItem>? = null
+)
+
+@JsonIgnoreProperties(ignoreUnknown = true)
+data class BgSearchItem(
+    @JsonProperty("used_slug") val usedSlug: String? = null,
+    @JsonProperty("used_type") val usedType: String? = null,
+    @JsonProperty("object_name") val objectName: String? = null,
+    @JsonProperty("object_poster_url") val posterUrl: String? = null,
+    @JsonProperty("object_face_url") val faceUrl: String? = null
 )
 
 @JsonIgnoreProperties(ignoreUnknown = true)
