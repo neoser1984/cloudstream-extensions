@@ -71,12 +71,6 @@ https://rnttwmjcin.turknet.ercdn.net/lcpmvefbyo/aspor/aspor_1080p.m3u8
 https://tv-e-okul01.medya.trt.com.tr/master.m3u8
 #EXTINF:-1 tvg-id="ext" tvg-name="TRT COCUK DIYANET" tvg-logo="https://raw.githubusercontent.com/tv-logo/tv-logos/refs/heads/main/countries/turkey/trt-cocuk-tr.png" group-title="ULUSAL",TRT COCUK DIYANET
 https://tv-trtdiyanetcocuk.medya.trt.com.tr/master_720.m3u8
-#EXTINF:-1,TRT AVAZ
-https://tv-trtavaz.medya.trt.com.tr/master.m3u8
-#EXTINF:-1,TRT KURDi
-https://tv-trtkurdi.medya.trt.com.tr/master.m3u8
-#EXTINF:-1,TRT ARABi
-https://tv-trtarabi.medya.trt.com.tr/master.m3u8
 #EXTINF:-1,TRT WORLD
 https://tv-trtworld.medya.trt.com.tr/master.m3u8
 #EXTINF:-1 tvg-name="TRT Muzik" tvg-id="TRTMuzik.tr" tvg-logo="https://i.ibb.co/4gbPpzC/trt-muzik.png" group-title="MUZIK",TRT MUZIK
@@ -436,8 +430,6 @@ https://edge.socialsmart.tv/belemturktv/bant1/chunks.m3u8
 https://ceokzokgtd.erbvr.com/tabiitv/tabiitv_1080p.m3u8?sid=IUlyczhCBES7nvvwJSIycw&bvr_flags=10&bvr_ch=tabiitv&bvr_bw=2800000
 #EXTINF:-1 tvg-name="NR1 FASHION ONE" tvg-id="" tvg-logo="https://i.ibb.co/HV0x9JZ/fashion-one.png" group-title="MUZIK",NR1 FASHION ONE
 http://b01c02nl.mediatriple.net/videoonlylive/mtkgeuihrlfwlive/u_stream_5c9e2ee6997cb_1/playlist.m3u8
-#EXTINF:1 tvg-id="" tvg-logo="http://assets.tvcdn.net/15e32d50-4058-4fa6-a6e2-3e1dbc35c70c.jpeg" group-title="ÇOCUK",Zarok TV Kürtçe
-https://zindikurmanci.zaroktv.com.tr/hls/stream.m3u8
 #EXTINF:-1 Yedek="http://176.65.146.171:9981/stream/channelid/569904314?profile=htsp" Yedek2="http://c3921155.edmonst.net/iptv/DVHP2VB5QXL7UC/6797/index.m3u8" Yedek3="https://rmtftbjlne.turknet.ercdn.net/bpeytmnqyp/showtv/showtv_1080p.m3u8" Yedek4="https://vavoo.ahkm.workers.dev/?ID=144949986573359afbfeae" Yedek5="http://tv.smartglwiz.workers.dev/?ID=ShowTV_HD" Yedek6="https://goldvod.org/live/hpgdiscoo/123456/521.m3u8" Yedek7="https://tv.cdn-vizi.workers.dev/?ID=3" Yedek8="https://ciner.daioncdn.net/showtv/showtv.m3u8?ce=3&app=4bc856ef-4c68-4a94-bc87-37dfaaa66558" tvg-id="SHOW TV HD.tr" yedek9="https://vavoo.ahkm.workers.dev/?ID=3537232978db7b25368a4b" tvg-logo="https://upload.wikimedia.org/wikipedia/commons/f/f1/Logo_of_Show_TV.png" group-title="ULUSAL",SHOW TV
 http://176.65.146.171:9981/stream/channelid/569904314?profile=htsp
 #EXTINF:-1 Yedek="http://s06.wsbof.com:8080/s/6f068629/cnn-hd-tr.m3u8" Yedek2="http://c3921155.edmonst.net/iptv/DVHP2VB5QXL7UC/6926/index.m3u8" Yedek3="http://176.65.146.171:9981/stream/channelid/110385441?profile=htsp" Yedek4="http://78.128.125.60:9981/play/a01f/index.m3u8" Yedek5="http://95.174.71.114:80/TR-CNN-TURK/index.m3u8" Yedek6="https://helga.iptv2022.com/sh/cnn_turk/tracks-v4a1/mono.ts.m3u8?filter.tracks=a1v1v2v3v4&|User-Agent=okhttp/3.8.0/|Referer=https://turkcanli.tv/" Yedek7="https://cdn-eu.tivimivi.com/streams/114/1920x1080/index.m3u8" tvg-id="CNN TÜRK HD.tr" tvg-logo="https://i.ibb.co/bFsmkwJ/cnn-turk.png" group-title="ULUSAL",CNN TURK
