@@ -351,6 +351,29 @@
         "name": "HDFilmizle"
     },
     {
+        "iconUrl": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh3vCp6N1K4bECoYRQD-cisJF2_6V_Hk01ZhDmoPR2JuM8O5qr4MqrPO1munM9cRlleBBSK6odYhLtDBWv4E3vhPhynlmS5hVVtJZShHoGA5REQ8_3v8SIlccTEqzVQu2UJyNYQdJNrKIfWy66RQeT0D-CcmFCbHPz5023H6p2v5fv4NVloZ5Rqo_yGrIY/s320/iNat-Box-App.png",
+        "fileHash": "sha256-220d119e753d3588c3ff027f45e037d07de424baaffa5eb1329ad190d0212560",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 47691,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "murattunc05 (kaynak kod)",
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries",
+            "Live"
+        ],
+        "version": 1,
+        "internalName": "InatBox",
+        "description": "\u0130natBox - Sevdi\u011finiz yay\u0131n platformlar\u0131n\u0131 ve canl\u0131 ma\u00e7lar\u0131 burada bulabilirsiniz.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/InatBox.cs3",
+        "name": "InatBox"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=korefilmizle.com&sz=%size%",
         "fileHash": "sha256-969fcce71731ec29659482ce69200ef0b2d5f39f98b4fd6aba9ce7df3cc3cd7b",
         "apiVersion": 1,
