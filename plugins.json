@@ -42,6 +42,26 @@
         "name": "DiziPal2121"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=filmmakinesi.to&sz=%size%",
+        "fileHash": "sha256-0cc581fb96d6c6f40299fdd80d6bb4bf8d00a5f29862c09dd2017164d7b3e333",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 16698,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "FilmMakinesi",
+        "description": "FilmMakinesi - reklams\u0131z, h\u0131zl\u0131 film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/FilmMakinesi.cs3",
+        "name": "FilmMakinesi"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=selcukflix.co&sz=%size%",
         "fileHash": "sha256-d51730122b9c85b11f57fd71712bc783b26eb6b1516041afd115c21ab0959dd3",
         "apiVersion": 1,
