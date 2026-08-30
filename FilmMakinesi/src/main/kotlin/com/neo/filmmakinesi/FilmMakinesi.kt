@@ -72,7 +72,7 @@ class FilmMakinesi : MainAPI() {
         val description = document.selectFirst("meta[name='description']")?.attr("content")?.trim()
 
         val infoDiv = document.selectFirst("div.info:has(div.type)")
-        val rating  = infoDiv?.selectFirst("div.imdb b")?.text()?.trim()?.toRatingInt()
+        val score   = infoDiv?.selectFirst("div.imdb b")?.text()?.trim()?.toDoubleOrNull()?.let { Score.from10(it) }
         val tags    = infoDiv?.select("div.type a")?.map { it.text().trim() }?.filter { it.isNotBlank() }
         val year    = document.select("a[href*='/yil/']").lastOrNull { it.text().trim().matches(Regex("""\d{4}""")) }?.text()?.trim()?.toIntOrNull()
 
@@ -87,7 +87,7 @@ class FilmMakinesi : MainAPI() {
             this.year      = year
             this.plot      = description
             this.tags      = tags
-            this.rating    = rating
+            this.score     = score
             this.actors    = actors
         }
     }
