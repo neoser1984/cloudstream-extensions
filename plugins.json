@@ -184,6 +184,27 @@
         "name": "HDFilmCehennemi"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmdiziizle.com&sz=%size%",
+        "fileHash": "sha256-0ed99f254ac49dd5fe8da2c1a986dc6b621dd268dc1b486f774a26307c641b87",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 19097,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "HDFilmDiziIzle",
+        "description": "HDFilmDiziIzle - HD film ve dizi izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/HDFilmDiziIzle.cs3",
+        "name": "HDFilmDiziIzle"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmizle.vip&sz=%size%",
         "fileHash": "sha256-058109b5984882aee8b490299e742346721d0415b60a749d70f737e08872e243",
         "apiVersion": 1,
