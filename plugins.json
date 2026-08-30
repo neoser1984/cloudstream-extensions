@@ -226,6 +226,26 @@
         "name": "SelcukFlix"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=trdiziizle.tv&sz=%size%",
+        "fileHash": "sha256-091849b41ea586bd1c50b3a741206f5fd8922b48f6af2922c12d0dbda5badeb8",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 17177,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "TrDiziIzle",
+        "description": "TrDiziIzle - Yerli diziler, t\u00fcm b\u00f6l\u00fcmler tek par\u00e7a.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/TrDiziIzle.cs3",
+        "name": "TrDiziIzle"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=tvdiziler.tv&sz=%size%",
         "fileHash": "sha256-b1baefba993b446e24e8c265a53935aaba7a9ee858c0f38080229dcf506bf611",
         "apiVersion": 1,
