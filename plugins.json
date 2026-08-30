@@ -20,6 +20,28 @@
         "name": "DDizi"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziasya.com&sz=%size%",
+        "fileHash": "sha256-99cae84b80a5fc73370b1cb11a83c9dc4de9b6dba4192a199f7092384d9415f1",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 19144,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries",
+            "Anime"
+        ],
+        "version": 1,
+        "internalName": "DiziAsya",
+        "description": "DiziAsya - Kore, \u00c7in, Japon dizi/film/anime/program izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziAsya.cs3",
+        "name": "DiziAsya"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizigom.biz&sz=%size%",
         "fileHash": "sha256-6bd9b38bace985e61cffae5f41dcaae00de75c3ecf42f0cd7c11ee8e9503e998",
         "apiVersion": 1,
