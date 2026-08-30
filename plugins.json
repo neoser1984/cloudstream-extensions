@@ -1,5 +1,26 @@
 [
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=asyawatch.com&sz=%size%",
+        "fileHash": "sha256-6c442852292abbc1503fd988ad9b266ad9bd9b49876bb0a96a496b41a4bc4dd5",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 18513,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "AsyaWatch",
+        "description": "AsyaWatch - Kore, \u00c7in, Japon dizi/film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/AsyaWatch.cs3",
+        "name": "AsyaWatch"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=ddizi.im&sz=%size%",
         "fileHash": "sha256-1fb76eb3280ae9ca9ecbc794046a7b4ecfe6c075532f6f290a8ff67aae531927",
         "apiVersion": 1,
