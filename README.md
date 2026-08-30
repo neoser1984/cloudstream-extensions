@@ -1,10 +1,11 @@
 # NeO CloudStream Eklentileri
 
-Kişisel CloudStream eklenti deposu. Şu an **22 eklenti** içerir:
+Kişisel CloudStream eklenti deposu. Şu an **23 eklenti** içerir:
 
 | Eklenti | Site | Tür |
 |---|---|---|
 | **AsyaWatch** | asyawatch.com | Dizi + Film |
+| **Canlı Kanallar** | (GitHub üzerinden M3U playlist) | Canlı TV |
 | **DDizi** | ddizi.im | Dizi |
 | **DiziAsya** | diziasya.com | Dizi + Film + Anime |
 | **DiziGom** | dizigom.biz | Dizi |
@@ -56,7 +57,8 @@ Bu sitelerin adresleri zaman zaman değişiyor (`dizipal2121.com` → `dizipal21
     "korefilmizle": "https://korefilmizle.com",
     "webdramaturkey": "https://webdramaturkey2.com",
     "diziasya": "https://diziasya.com",
-    "asyawatch": "https://asyawatch.com"
+    "asyawatch": "https://asyawatch.com",
+    "canlikanallar": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/main/CanliKanallar.m3u"
 }
 ```
 
@@ -123,11 +125,14 @@ settings.gradle.kts             ← hangi klasörlerin eklenti olduğunu bulur
 
 **AsyaWatch** — her sayfanın `__NEXT_DATA__` script etiketinde base64 ile kodlanmış tam bir JSON veri yapısı bulunuyor (meta veri, sezon/bölüm listesi, video kaynakları dahil); eklenti ayrı bir kazıma yapmadan bunu çözüp okuyor. Ayrıca ana sayfa/liste sayfaları için sitenin kendi dahili JSON API'sini (`/api/bg/findSeries`, `/api/bg/findMovies`, `/api/bg/searchContent`) kullanıyor.
 
+**Canlı Kanallar** — diğer eklentilerden farklı olarak bir siteyi kazımıyor: kök dizindeki **[`CanliKanallar.m3u`](./CanliKanallar.m3u)** (standart IPTV M3U/M3U8 playlist) dosyasını çalışma zamanında indirip parse ediyor, `group-title`'a göre kategorilere ayırıp `TvType.Live` olarak listeliyor. Playlist adresi de `domains.json`'daki `canlikanallar` anahtarından okunuyor — yani kanal eklemek/çıkarmak/link güncellemek için sadece `CanliKanallar.m3u`'yu güncelleyip push etmek yeterli, eklentiyi yeniden derlemeye gerek yok.
+
 ## ⚠️ Bilinen kısıtlar
 
 - **WebDramaTurkey**: video oynatıcı adresi sitede JavaScript ile istemci tarafında üretiliyor (statik HTML'de bulunmuyor), bu yüzden video linki genelde bulunamıyor. Dizi/film gezinme, arama ve bölüm listesi normal çalışıyor.
 - **AsyaWatch**: video kaynağı sitenin kendi barındırdığı, Cloudflare korumalı bir adrese işaret ediyor; ağ koşullarına göre video her zaman açılmayabilir.
+- **Canlı Kanallar**: kanal linkleri üçüncü taraf, herkese açık kaynaklardan derlenmiştir; bu linkler bizim kontrolümüzde değildir ve zaman zaman kesilebilir/değişebilir. Bir kanal açılmıyorsa `CanliKanallar.m3u` içindeki linki güncel bir kaynakla değiştirmek gerekir.
 
 ## ⚠️ Not
 
-Bu eklentiler herkese açık web sitelerini kazır (scrape); siteler yapılarını değiştirdikçe küçük bakımlar gerekebilir. Kişisel kullanım içindir.
+Bu eklentiler herkese açık web sitelerini kazır (scrape); siteler yapılarını değiştirdikçe küçük bakımlar gerekebilir (tıpkı [Kekik-cloudstream](https://github.com/keyiflerolsun/Kekik-cloudstream) gibi tüm benzer eklenti depolarında olduğu gibi). Kişisel kullanım içindir.
