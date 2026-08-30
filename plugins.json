@@ -21,6 +21,26 @@
         "name": "AsyaWatch"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=github.com&sz=%size%",
+        "fileHash": "sha256-dff3df54e05aa7283916bf102009a7c58e471248c72283f6620f07af31014162",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 13653,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Live"
+        ],
+        "version": 1,
+        "internalName": "CanliKanallar",
+        "description": "Canl\u0131 Kanallar - T\u00fcrk\u00e7e ulusal/haber/spor/m\u00fczik canl\u0131 TV kanallar\u0131 (IPTV/M3U).",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/CanliKanallar.cs3",
+        "name": "CanliKanallar"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=ddizi.im&sz=%size%",
         "fileHash": "sha256-1fb76eb3280ae9ca9ecbc794046a7b4ecfe6c075532f6f290a8ff67aae531927",
         "apiVersion": 1,
