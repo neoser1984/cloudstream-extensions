@@ -83,6 +83,27 @@
         "name": "DiziAsya"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.dizibox.live&sz=%size%",
+        "fileHash": "sha256-ec38b834859cf1eb87fa02177ce89257ed3bb982f4c36b6a4bef5a0cfdcea34e",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 22662,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "murattunc05 (kaynak kod)",
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DiziBox",
+        "description": "Yabanc\u0131 Dizi izle, T\u00fcm yabanc\u0131 dizilerin yeni ve eski sezonlar\u0131n\u0131 full hd izleyebilece\u011finiz elit site.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziBox.cs3",
+        "name": "DiziBox"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizigom.biz&sz=%size%",
         "fileHash": "sha256-6bd9b38bace985e61cffae5f41dcaae00de75c3ecf42f0cd7c11ee8e9503e998",
         "apiVersion": 1,
