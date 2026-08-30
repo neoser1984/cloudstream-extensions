@@ -1,5 +1,26 @@
 [
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizikorea3.com&sz=%size%",
+        "fileHash": "sha256-b7fea9469e1006ed9edb85c76bb84f077f2cbec0f81d2405b6c2fc78baf79f60",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 20126,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "AsianDrama",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "DiziKorea",
+        "description": "DiziKorea - Kore, \u00c7in, Japon, Tayland, Tayvan, Filipin dizi ve filmleri T\u00fcrk\u00e7e altyaz\u0131l\u0131 izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziKorea.cs3",
+        "name": "DiziKorea"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizimom.food&sz=%size%",
         "fileHash": "sha256-5d494a40ce2b6bfc893833c5b738e7b551fe3dc84a43c37a86eb9e9c68ccb639",
         "apiVersion": 1,
