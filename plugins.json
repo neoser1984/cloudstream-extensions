@@ -62,6 +62,26 @@
         "name": "DiziPal2121"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziyou.one&sz=%size%",
+        "fileHash": "sha256-660850f0db766619090c6b9cc57bd2358173308caf1ff145fe3ef430c9cd11c7",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 17065,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DiziYou",
+        "description": "DiziYou - T\u00fcrk\u00e7e dublaj ve altyaz\u0131l\u0131 yabanc\u0131 dizi izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziYou.cs3",
+        "name": "DiziYou"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=filmmakinesi.to&sz=%size%",
         "fileHash": "sha256-0cc581fb96d6c6f40299fdd80d6bb4bf8d00a5f29862c09dd2017164d7b3e333",
         "apiVersion": 1,
