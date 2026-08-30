@@ -135,4 +135,4 @@ settings.gradle.kts             ← hangi klasörlerin eklenti olduğunu bulur
 
 ## ⚠️ Not
 
-Bu eklentiler herkese açık web sitelerini kazır (scrape); siteler yapılarını değiştirdikçe küçük bakımlar gerekebilir (tıpkı [Kekik-cloudstream](https://github.com/keyiflerolsun/Kekik-cloudstream) gibi tüm benzer eklenti depolarında olduğu gibi). Kişisel kullanım içindir.
+Bu eklentiler herkese açık web sitelerini kazır (scrape); siteler yapılarını değiştirdikçe küçük bakımlar gerekebilir. Kişisel kullanım içindir.
