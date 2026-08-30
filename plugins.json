@@ -288,6 +288,27 @@
         "name": "HDFilmizle"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=korefilmizle.com&sz=%size%",
+        "fileHash": "sha256-969fcce71731ec29659482ce69200ef0b2d5f39f98b4fd6aba9ce7df3cc3cd7b",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 16916,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "KoreFilmizle",
+        "description": "KoreFilmizle - Kore dizi ve film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/KoreFilmizle.cs3",
+        "name": "KoreFilmizle"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=selcukflix.co&sz=%size%",
         "fileHash": "sha256-d51730122b9c85b11f57fd71712bc783b26eb6b1516041afd115c21ab0959dd3",
         "apiVersion": 1,
