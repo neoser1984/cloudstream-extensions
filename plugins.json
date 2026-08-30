@@ -370,6 +370,27 @@
         "name": "TvDiziler"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=webdramaturkey2.com&sz=%size%",
+        "fileHash": "sha256-299f74bbbb452b5e6a3e76f18b781d2d286e85d26858a730a1a4668549952768",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 17646,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "WebDramaTurkey",
+        "description": "Web Drama Turkey - Kore, \u00c7in ve Japon dizi/film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/WebDramaTurkey.cs3",
+        "name": "WebDramaTurkey"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=yabancidizi.news&sz=%size%",
         "fileHash": "sha256-bf59cf740a18e17933a2833524c80d90a0b494ee1ebd504131e44adbf2382f94",
         "apiVersion": 1,
