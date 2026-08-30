@@ -62,6 +62,27 @@
         "name": "FilmMakinesi"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=%size%",
+        "fileHash": "sha256-56530c5ced830b7c85c43fee94822e358c93d8f827cee4136ed857e875bbc8ff",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 27751,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "HDFilmCehennemi",
+        "description": "HDFilmCehennemi - reklams\u0131z, h\u0131zl\u0131 film ve dizi izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/HDFilmCehennemi.cs3",
+        "name": "HDFilmCehennemi"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=selcukflix.co&sz=%size%",
         "fileHash": "sha256-d51730122b9c85b11f57fd71712bc783b26eb6b1516041afd115c21ab0959dd3",
         "apiVersion": 1,
