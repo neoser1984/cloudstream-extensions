@@ -82,6 +82,26 @@
         "name": "FilmMakinesi"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=fullhdfilmizlesene.now&sz=%size%",
+        "fileHash": "sha256-a23e5eaea96a5fc542a64da4a35505fcfa642730fc581203f74c0a8912f5b82a",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 23518,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "FullHDFilmizlesene",
+        "description": "FullHDFilmizlesene - T\u00fcrk\u00e7e dublaj ve altyaz\u0131l\u0131 Full HD film izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/FullHDFilmizlesene.cs3",
+        "name": "FullHDFilmizlesene"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=%size%",
         "fileHash": "sha256-56530c5ced830b7c85c43fee94822e358c93d8f827cee4136ed857e875bbc8ff",
         "apiVersion": 1,
