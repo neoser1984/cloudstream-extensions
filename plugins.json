@@ -1,5 +1,25 @@
 [
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizimom.food&sz=%size%",
+        "fileHash": "sha256-5d494a40ce2b6bfc893833c5b738e7b551fe3dc84a43c37a86eb9e9c68ccb639",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 21714,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DiziMom",
+        "description": "DiziMom - binlerce yerli/yabanc\u0131 dizi ar\u015fivi, reklams\u0131z izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziMom.cs3",
+        "name": "DiziMom"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizipal1578.com&sz=%size%",
         "fileHash": "sha256-0d9923c979a2cb9b36ff2535af60bd2a887730e9803a6f20694ca34b2594cfe2",
         "apiVersion": 1,
