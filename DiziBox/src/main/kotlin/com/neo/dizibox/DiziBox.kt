@@ -101,7 +101,9 @@ private fun Element.toMainPageResult(): SearchResponse? {
     val href = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
     val posterUrl = fixUrlNull(
         this.selectFirst("img")?.let { img ->
-            img.attr("data-src").takeIf { it.isNotBlank() } ?: img.attr("src")
+            val dataSrc: String = img.attr("data-src")
+            val src: String     = img.attr("src")
+            if (dataSrc.isNotBlank()) dataSrc else src
         }
     )
 
