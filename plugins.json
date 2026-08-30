@@ -103,6 +103,27 @@
         "name": "DiziPal2121"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=diziyo.so&sz=%size%",
+        "fileHash": "sha256-edb660b03fd38dfe9f7e45054ba93721ff114deee9694d38ffc4035f9844014b",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 15583,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Diziyo",
+        "description": "Diziyo - Dizi, film ve anime izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/Diziyo.cs3",
+        "name": "Diziyo"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=diziyou.one&sz=%size%",
         "fileHash": "sha256-660850f0db766619090c6b9cc57bd2358173308caf1ff145fe3ef430c9cd11c7",
         "apiVersion": 1,
