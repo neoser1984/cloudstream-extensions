@@ -1,0 +1,35 @@
+name: Canlı Kanallar Güncelle
+
+on:
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: canli-kanallar-guncelle
+  cancel-in-progress: false
+
+jobs:
+  guncelle:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Depo Kontrolü
+        uses: actions/checkout@v4.2.2
+
+      - name: Kanal Listesini Güncelle
+        run: python3 scripts/canli_kanallar_guncelle.py
+
+      - name: Değişiklik Varsa Commit'le
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add CanliKanallar.m3u
+          if git diff --cached --quiet; then
+            echo "Değişiklik yok, commit atlanıyor."
+            exit 0
+          fi
+          git commit -m "canlıkanallar: onureroz.com listesi otomatik güncellendi"
+          git push

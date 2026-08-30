@@ -13,6 +13,7 @@ on:
     paths-ignore:
       - "**/*.md"
       - "domains.json"
+      - "CanliKanallar.m3u"
 
 jobs:
   CloudStreamDerleyici:
