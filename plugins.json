@@ -184,6 +184,27 @@
         "name": "HDFilmCehennemi"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmizle.vip&sz=%size%",
+        "fileHash": "sha256-058109b5984882aee8b490299e742346721d0415b60a749d70f737e08872e243",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 20800,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "HDFilmizle",
+        "description": "HDFilmizle - HD Film ve yabanc\u0131 dizi izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/HDFilmizle.cs3",
+        "name": "HDFilmizle"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=selcukflix.co&sz=%size%",
         "fileHash": "sha256-d51730122b9c85b11f57fd71712bc783b26eb6b1516041afd115c21ab0959dd3",
         "apiVersion": 1,
