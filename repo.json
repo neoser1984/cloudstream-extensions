@@ -1,6 +1,6 @@
 {
     "name": "NeO Eklenti Deposu",
-    "description": "Kişisel CloudStream eklenti deposu (DiziPal 2121, DiziPal 1578, SelcukFlix)",
+    "description": "Kisisel CloudStream eklenti deposu - Turkce ve Asya dizi/film siteleri (DiziPal, SelcukFlix, HDFilmCehennemi, KoreFilmizle, DiziAsya, AsyaWatch ve 15+ site daha)",
     "manifestVersion": 1,
     "pluginLists": [
       "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/plugins.json"
