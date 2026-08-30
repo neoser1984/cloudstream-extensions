@@ -27,12 +27,19 @@ class SelcukFlix : MainAPI() {
     private val jsonMapper = jacksonObjectMapper()
 
     // request.data burada gerçek bir URL değil, anasayfanın çözülmüş JSON'undaki alan adıdır.
+    // ! Anasayfanın secureData'sında bunların dışında da alanlar var (getMovieGroups, getChannels gibi)
+    // ! ama onlar sadece kategori/kanal TANIMLARI - gerçek içerik listesi için ayrı bir istek gerekiyor.
+    // ! Aşağıdakilerin hepsi tek istekte gelen hazır içerik listeleri.
     override val mainPage = mainPageOf(
         "getTrendSeries"         to "Trend Diziler",
         "getTrendMovies"         to "Trend Filmler",
         "getEpisodesOnNewSeries" to "Güncel Bölümler",
+        "getEpisodesOnNewSeason" to "Yeni Sezon Bölümleri",
+        "getEpisodesOnBrandAll"  to "Öne Çıkan Bölümler",
         "getLastMovies"          to "Son Eklenen Filmler",
+        "getMovieListByList"     to "Editörün Seçtikleri",
         "allPopularSeries"       to "Popüler Diziler",
+        "getSerieListByChannel"  to "Kanal Dizileri",
     )
 
     // ! Anasayfa tek seferde indirilip çözülür, mainPage satırları arasında kısa süreliğine önbelleklenir.
@@ -133,8 +140,8 @@ class SelcukFlix : MainAPI() {
 
         val arr = decrypted.path(request.data)
         val items: List<SearchResponse> = when (request.data) {
-            "getTrendMovies", "getLastMovies" -> arr.mapNotNull { it.toMovieResult() }
-            "getEpisodesOnNewSeries"          -> arr.mapNotNull { it.toEpisodeAsSeriesResult() }
+            "getTrendMovies", "getLastMovies", "getMovieListByList" -> arr.mapNotNull { it.toMovieResult() }
+            "getEpisodesOnNewSeries", "getEpisodesOnNewSeason", "getEpisodesOnBrandAll" -> arr.mapNotNull { it.toEpisodeAsSeriesResult() }
             else                              -> arr.mapNotNull { it.toSeriesResult() }
         }
 
@@ -143,11 +150,16 @@ class SelcukFlix : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         return try {
-            val cipherText = app.post(
+            // ! Yanıt {"response":"<base64 şifreli>"} şeklinde JSON'a sarılı geliyor;
+            // ! doğrudan gövdeyi çözmeye çalışmak (eski davranış) her zaman başarısız oluyordu.
+            val rawBody = app.post(
                 "${mainUrl}/api/bg/searchContent",
                 params  = mapOf("searchterm" to query),
                 referer = "${mainUrl}/"
             ).text
+
+            val cipherText = jsonMapper.readTree(rawBody).path("response").takeIf { it.isTextual }?.asText()
+                ?: return emptyList()
 
             val plain = SelcukCrypto.decrypt(cipherText) ?: return emptyList()
             jsonMapper.readTree(plain).path("result").mapNotNull { it.toSearchApiResult() }
@@ -286,7 +298,7 @@ class SelcukFlix : MainAPI() {
         return try {
             val res = app.get(iframeUrl, referer = referer).text
             val m3u = Regex("""file\s*:\s*"([^"]+)"""").find(res)?.groupValues?.get(1)
-                ?: Regex("""(https?:[^"'\s]+\.m3u8[^"'\s]*)""").find(res)?.groupValues?.get(1)
+                ?: Regex("""(https::[^"'\s]+\.m3u8[^"'\s]*)""").find(res)?.groupValues?.get(1)
 
             if (m3u != null) {
                 callback.invoke(
