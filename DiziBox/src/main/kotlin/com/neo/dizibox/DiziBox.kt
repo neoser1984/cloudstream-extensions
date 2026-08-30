@@ -99,12 +99,13 @@ class DiziBox : MainAPI() {
 private fun Element.toMainPageResult(): SearchResponse? {
     val title = this.selectFirst("a")?.text() ?: return null
     val href = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
+    val imgEl = this.selectFirst("img")
     val posterUrl = fixUrlNull(
-        this.selectFirst("img")?.let { img ->
-            val dataSrc: String = img.attr("data-src")
-            val src: String     = img.attr("src")
+        if (imgEl != null) {
+            val dataSrc: String = imgEl.attr("data-src")
+            val src: String     = imgEl.attr("src")
             if (dataSrc.isNotBlank()) dataSrc else src
-        }
+        } else null
     )
 
     return newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
