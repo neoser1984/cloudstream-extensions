@@ -145,6 +145,27 @@
         "name": "DiziKorea"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizilla.club&sz=%size%",
+        "fileHash": "sha256-b57e09f795df1173bcacaf7230d8a57e98b2163036530003ee214f6eba0124e4",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 36147,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "murattunc05 (kaynak kod)",
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Dizilla",
+        "description": "Dizilla t\u00fcm yabanc\u0131 dizileri \u00fccretsiz olarak T\u00fcrk\u00e7e Dublaj ve altyaz\u0131l\u0131 se\u00e7enekleri ile 1080P kalite izleyebilece\u011finiz yeni nesil yabanc\u0131 dizi izleme siteniz.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/Dizilla.cs3",
+        "name": "Dizilla"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizimom.food&sz=%size%",
         "fileHash": "sha256-5d494a40ce2b6bfc893833c5b738e7b551fe3dc84a43c37a86eb9e9c68ccb639",
         "apiVersion": 1,
