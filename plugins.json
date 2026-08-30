@@ -164,6 +164,27 @@
         "name": "FilmMakinesi"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=filmzal.me&sz=%size%",
+        "fileHash": "sha256-a9948d995fadc22ca01f6df63d2b5e7801c4a2b7ec5f6a4ac112d0501af926f4",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 22102,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "Movie",
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "Filmzal",
+        "description": "Filmzal - Film ve dizi izleme.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/Filmzal.cs3",
+        "name": "Filmzal"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=fullhdfilmizlesene.now&sz=%size%",
         "fileHash": "sha256-a23e5eaea96a5fc542a64da4a35505fcfa642730fc581203f74c0a8912f5b82a",
         "apiVersion": 1,
