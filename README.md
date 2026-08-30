@@ -139,10 +139,6 @@ settings.gradle.kts             ← hangi klasörlerin eklenti olduğunu bulur
 - **AsyaWatch**: video kaynağı sitenin kendi barındırdığı, Cloudflare korumalı bir adrese işaret ediyor; ağ koşullarına göre video her zaman açılmayabilir.
 - **Canlı Kanallar**: kanal linkleri üçüncü taraf, herkese açık kaynaklardan derlenmiştir; bu linkler bizim kontrolümüzde değildir ve zaman zaman kesilebilir/değişebilir. Bir kanal açılmıyorsa `CanliKanallar.m3u` içindeki linki güncel bir kaynakla değiştirmek gerekir.
 
-## 🙏 Teşekkür / Kaynak
-
-Bu depodaki [InatBox, RecTV, DiziBox, SezonlukDizi, Dizilla, SetFilmIzle] eklentileri [murattunc05/cloudstream-turkish](https://github.com/murattunc05/cloudstream-turkish) (GPLv3, @keyiflerolsun'un Kekik-cloudstream projesine dayanıyor) kaynağından uyarlanmıştır.
-
 ## ⚠️ Not
 
 Bu eklentiler herkese açık web sitelerini kazır (scrape); siteler yapılarını değiştirdikçe küçük bakımlar gerekebilir. Kişisel kullanım içindir.
