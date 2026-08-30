@@ -113,14 +113,22 @@ class DiziMom : MainAPI() {
         val document = app.get(data).document
 
         val iframes = mutableListOf<String>()
-        val mainIframe = document.selectFirst("div.video p iframe")?.let { it.attr("data-src").ifBlank { it.attr("src") } }
-        if (!mainIframe.isNullOrBlank() && mainIframe != "about:blank") iframes.add(mainIframe)
+        val mainIframeEl = document.selectFirst("div.video p iframe")
+        if (mainIframeEl != null) {
+            val dataSrc: String = mainIframeEl.attr("data-src")
+            val mainIframe: String = if (dataSrc.isNotBlank()) dataSrc else mainIframeEl.attr("src")
+            if (mainIframe.isNotBlank() && mainIframe != "about:blank") iframes.add(mainIframe)
+        }
 
         document.select("div.sources a").forEach {
             try {
                 val subDocument = app.get(it.attr("href")).document
-                val subIframe   = subDocument.selectFirst("div.video p iframe")?.let { el -> el.attr("data-src").ifBlank { el.attr("src") } }
-                if (!subIframe.isNullOrBlank() && subIframe != "about:blank") iframes.add(subIframe)
+                val subIframeEl = subDocument.selectFirst("div.video p iframe")
+                if (subIframeEl != null) {
+                    val subDataSrc: String = subIframeEl.attr("data-src")
+                    val subIframe: String = if (subDataSrc.isNotBlank()) subDataSrc else subIframeEl.attr("src")
+                    if (subIframe.isNotBlank() && subIframe != "about:blank") iframes.add(subIframe)
+                }
             } catch (e: Exception) {
                 Log.d("DZM", "alt kaynak hatası » ${e.message}")
             }
