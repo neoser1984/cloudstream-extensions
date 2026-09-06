@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 cloudstream {
     authors     = listOf("murattunc05 (kaynak kod)", "NeO")
@@ -14,5 +14,5 @@ cloudstream {
     **/
     status  = 1
     tvTypes = listOf("Movie", "TvSeries")
-    iconUrl = "https://www.google.com/s2/favicons?domain=www.setfilmizle.uk&sz=%size%"
+    iconUrl = "https://www.google.com/s2/favicons?domain=www.setfilmizle.ltd&sz=%size%"
 }
