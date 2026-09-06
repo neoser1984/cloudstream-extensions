@@ -482,10 +482,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=www.setfilmizle.ltd&sz=%size%",
-        "fileHash": "sha256-fa5c887b9563a66219643b2b26fb7de638ea7528245cffe28149c12fbb3723b7",
+        "fileHash": "sha256-449f99c9c41025e4ed22681cbfbac560ad6efe894242003fe2a859052fe6ea64",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 28410,
+        "fileSize": 29617,
         "status": 1,
         "language": "tr",
         "authors": [
