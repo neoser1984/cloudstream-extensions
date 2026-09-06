@@ -13,7 +13,6 @@ on:
     paths-ignore:
       - "**/*.md"
       - "domains.json"
-      - "CanliKanallar.m3u"
 
 jobs:
   CloudStreamDerleyici:
@@ -41,6 +40,21 @@ jobs:
 
       - name: Android SDK Ayarla
         uses: android-actions/setup-android@v3.2.2
+
+      # ! JitPack'in "com.github.recloudstream.gradle:gradle:master-SNAPSHOT" adresi
+      # ! şu an bozuk metadata üretiyor (bkz: inconsistent module metadata /
+      # ! "master-aster-SNAPSHOT" hatası) ve derlemeyi tamamen engelliyor.
+      # ! Bu yüzden JitPack'e hiç güvenmiyoruz: eklentiyi doğrudan kaynağından
+      # ! (recloudstream/gradle deposu) burada, her derlemede taze olarak
+      # ! kendimiz derleyip yerel bir .jar olarak kullanıyoruz.
+      - name: "CloudStream Gradle Eklentisini Kaynaktan Derle (JitPack'e bağımlı değil)"
+        run: |
+          git clone --depth 1 https://github.com/recloudstream/gradle.git /tmp/cs-gradle-plugin
+          cd /tmp/cs-gradle-plugin
+          chmod +x gradlew
+          ./gradlew jar -x test --no-daemon
+          mkdir -p $GITHUB_WORKSPACE/src/local-libs
+          cp build/libs/*.jar $GITHUB_WORKSPACE/src/local-libs/cloudstream-gradle-plugin.jar
 
       - name: Eklentileri Derle
         run: |
