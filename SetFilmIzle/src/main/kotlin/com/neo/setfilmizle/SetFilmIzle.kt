@@ -160,21 +160,40 @@ class SetFilmIzle : MainAPI() {
      * ! Bu yüzden WebView'e ya da JS çalıştırmaya hiç gerek yok — TV kutuları/Android TV gibi
      * ! WebView bileşeni sağlıklı çalışmayan cihazlarda da sorunsuz çalışır.
      */
+    /**
+     * ! TANI (debug) modu: TV/kutu cihazlarda logcat'e erişimimiz olmadığı ve CloudStream'in bazı
+     * ! sürümleri ErrorLoadingException mesajını ekrana yansıtmadığı için (kullanıcı hâlâ sadece
+     * ! genel "Bağlantı bulunamadı" görüyor), asıl sebebi CloudStream'in KENDİ kaynak seçim
+     * ! listesinde, seçilebilir (ama tıklanınca oynamayan) sahte bir "kaynak" adı olarak
+     * ! gösteriyoruz — bu liste zaten normalde çalışan bir ekran olduğu için mesaj kesin görünür.
+     * ! Sorun çözülünce bu yardımcı fonksiyon ve çağrıları kaldırılacak.
+     */
+    private fun tanılinki(callback: (ExtractorLink) -> Unit, mesaj: String) {
+        callback(
+            ExtractorLink(
+                source  = "STF-TANI",
+                name    = "TANI» " + mesaj.take(180),
+                url     = "$mainUrl/#hata-tani",
+                referer = mainUrl,
+                quality = Qualities.Unknown.value,
+                type    = ExtractorLinkType.M3U8
+            )
+        )
+    }
+
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        // ! TANI (debug) modu: TV/kutu cihazlarda logcat'e erişimimiz olmadığı için,
-        // ! link bulunamadığında CloudStream'in kendi hata penceresinde görünecek şekilde
-        // ! ErrorLoadingException fırlatıyoruz — böylece asıl sebep ekrana düşüyor.
         val errors = mutableListOf<String>()
 
         val response = try {
             app.get(data, referer = mainUrl)
         } catch (e: Throwable) {
-            throw ErrorLoadingException("STF» sayfa alınamadı: ${e::class.simpleName}: ${e.message}")
+            tanılinki(callback, "sayfa alınamadı » ${e::class.simpleName}: ${e.message}")
+            return true
         }
         val document = response.document
         val html     = response.text
@@ -185,10 +204,12 @@ class SetFilmIzle : MainAPI() {
             ?: "$mainUrl/wp-admin/admin-ajax.php"
 
         if (postId.isNullOrBlank() || nonce.isNullOrBlank()) {
-            throw ErrorLoadingException(
-                "STF» postId/nonce bulunamadı » kod=${response.code}, postId=$postId, " +
-                "nonce=${if (nonce.isNullOrBlank()) "yok" else "var"}, sayfaUzunluk=${html.length}"
+            tanılinki(
+                callback,
+                "postId/nonce yok » kod=${response.code}, postId=$postId, " +
+                "nonce=${if (nonce.isNullOrBlank()) "yok" else "var"}, uzunluk=${html.length}"
             )
+            return true
         }
 
         val sources = document.select("#stfPlayer .fsrc.src-tab").map {
@@ -290,9 +311,10 @@ class SetFilmIzle : MainAPI() {
         Log.d("STF", "loadLinks » toplam bağlantı bulundu mu: $anyLinkFound » hatalar: $errors")
 
         if (!anyLinkFound) {
-            throw ErrorLoadingException(
-                if (errors.isNotEmpty()) "STF» " + errors.joinToString(" || ").take(400)
-                else "STF» kaynak listesi boş (sources=${sources.size})"
+            tanılinki(
+                callback,
+                if (errors.isNotEmpty()) errors.joinToString(" || ")
+                else "kaynak listesi boş (sources=${sources.size})"
             )
         }
 
