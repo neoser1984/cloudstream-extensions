@@ -57,6 +57,45 @@ open class SetPlay : ExtractorApi() {
 
         Log.d("Kekik_${this.name}", "Setplay Final Link » $m3uLink")
 
+        val manifestHeaders = mapOf(
+            "Referer"         to url,
+            "Cookie"          to cookies,
+            "User-Agent"      to userAgent,
+            "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+            "Accept"          to "*/*",
+            "Sec-Fetch-Dest"  to "empty",
+            "Sec-Fetch-Mode"  to "cors",
+            "Sec-Fetch-Site"  to "same-origin"
+        )
+
+        // ! TANI (debug) modu: "ERROR_CODE_PARSING_MANIFEST_MALFORMED" hatasının asıl sebebini
+        // ! görebilmek için manifesti burada bir kere de biz çekip, gövdesi gerçekten m3u8'e
+        // ! benziyor mu diye kontrol ediyoruz — benzemiyorsa sonucu, kaynak listesinde görünen
+        // ! sahte bir "TANI" satırı olarak bildiriyoruz. Sorun çözülünce kaldırılacak.
+        try {
+            val manifestCheck = app.get(url = m3uLink, headers = manifestHeaders)
+            val body = manifestCheck.text
+            if (!body.trimStart().startsWith("#EXTM3U")) {
+                callback.invoke(
+                    newExtractorLink(
+                        source = "STF-TANI",
+                        name   = "TANI» manifest kod=${manifestCheck.code} gövde=${body.take(150).replace("\n", " ")}",
+                        url    = "$mainUrl/#tani",
+                        type   = ExtractorLinkType.M3U8
+                    ) { quality = Qualities.Unknown.value }
+                )
+            }
+        } catch (e: Throwable) {
+            callback.invoke(
+                newExtractorLink(
+                    source = "STF-TANI",
+                    name   = "TANI» manifest hata » ${e::class.simpleName}: ${e.message}",
+                    url    = "$mainUrl/#tani",
+                    type   = ExtractorLinkType.M3U8
+                ) { quality = Qualities.Unknown.value }
+            )
+        }
+
         callback.invoke(
             newExtractorLink(
                 source  = this.name,
@@ -65,13 +104,7 @@ open class SetPlay : ExtractorApi() {
                 type    = ExtractorLinkType.M3U8
             ) {
                 quality = Qualities.Unknown.value
-                headers = mapOf(
-                    "Referer" to url,
-                    "Cookie" to cookies,
-                    "User-Agent" to userAgent,
-                    "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-                    "Accept" to "*/*"
-                )
+                headers = manifestHeaders
             }
         )
     }
