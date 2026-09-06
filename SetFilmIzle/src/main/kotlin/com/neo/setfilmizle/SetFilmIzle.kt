@@ -1,4 +1,5 @@
 // ! Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
+// ! Yeni tema (wp-theme-setfilm) uyumluluğu ve WebView tabanlı oynatıcı çözümü NeO tarafından eklenmiştir.
 
 package com.neo.setfilmizle
 
@@ -6,11 +7,11 @@ import android.util.Log
 import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.network.WebViewResolver
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import org.json.JSONObject
 import org.jsoup.Jsoup
-import okhttp3.*
 
 class SetFilmIzle : MainAPI() {
     override var mainUrl              = RemoteConfig.getDomain("setfilmizle", "https://www.setfilmizle.ltd")
@@ -47,17 +48,18 @@ class SetFilmIzle : MainAPI() {
         "${mainUrl}/tur/western/"     to "Western"
     )
 
+    // ! wp-theme-setfilm » kart yapısı: div.fgrid > a.card-link > article.card
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(request.data).document
-        val home     = document.select("div.items article").mapNotNull { it.toMainPageResult() }
+        val home     = document.select("div.fgrid a.card-link").mapNotNull { it.toMainPageResult() }
 
         return newHomePageResponse(request.name, home)
     }
 
     private fun Element.toMainPageResult(): SearchResponse? {
-        val title     = this.selectFirst("h2")?.text() ?: return null
-        val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
-        val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("data-src"))
+        val title     = this.selectFirst("span.hcard-title")?.text()?.trim() ?: return null
+        val href      = fixUrlNull(this.attr("href")) ?: return null
+        val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("src"))
 
         return if (href.contains("/dizi/")) {
             newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
@@ -80,49 +82,49 @@ class SetFilmIzle : MainAPI() {
         )
         val document = Jsoup.parse(JSONObject(search.text).getString("html"))
 
-        return document.select("div.items article").mapNotNull { it.toSearchResult() }
-    }
-
-    private fun Element.toSearchResult(): SearchResponse? {
-        val title     = this.selectFirst("h2")?.text() ?: return null
-        val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
-        val posterUrl = fixUrlNull(this.selectFirst("img")?.attr("data-src"))
-
-        return if (href.contains("/dizi/")) {
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
-        } else {
-            newMovieSearchResponse(title, href, TvType.Movie) { this.posterUrl = posterUrl }
-        }
+        return document.select("a.card-link").mapNotNull { it.toMainPageResult() }
     }
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
+    // ! wp-theme-setfilm » detay yapısı: div.fbox (poster: img.fbox-cover-img, özet: div.fbox-desc,
+    // ! tür: a[href*="/tur/"], yıl: a[href*="/yil/"], süre: ":contains(Süre:)", oyuncu: div.fbox-kadro span.fk-t b)
     override suspend fun load(url: String): LoadResponse? {
         val document = app.get(url).document
+        val fbox     = document.selectFirst("div.fbox")
 
-        val title           = document.selectFirst("h1")?.text()?.substringBefore(" izle")?.trim() ?: return null
-        val poster          = fixUrlNull(document.selectFirst("div.poster img")?.attr("src"))
-        val description     = document.selectFirst("div.wp-content p")?.text()?.trim()
-        var year            = document.selectFirst("div.extra span.C a")?.text()?.trim()?.toIntOrNull()
-        val tags            = document.select("div.sgeneros a").map { it.text() }
-        var duration        = document.selectFirst("span.runtime")?.text()?.split(" ")?.first()?.trim()?.toIntOrNull()
-        val recommendations = document.select("div.srelacionados article").mapNotNull { it.toRecommendationResult() }
-        val actors          = document.select("span.valor a").map { Actor(it.text()) }
-        val trailer         = Regex("""embed/(.*)\?rel""").find(document.html())?.groupValues?.get(1)?.let { "https://www.youtube.com/embed/$it" }
+        val title = document.selectFirst("h1")?.text()?.trim()
+            ?.replace(Regex("""\s*\(\d{4}\)\s*$"""), "")
+            ?.substringBefore(" izle")
+            ?.trim()
+            ?: return null
+
+        val poster = fixUrlNull(
+            fbox?.selectFirst("img.fbox-cover-img")?.attr("src")
+                ?: fbox?.selectFirst("img")?.attr("src")
+        )
+        val description     = fbox?.selectFirst("div.fbox-desc")?.text()?.trim()
+        val year             = fbox?.selectFirst("a[href*=\"/yil/\"]")?.text()?.trim()?.toIntOrNull()
+        val tags             = fbox?.select("a[href*=\"/tur/\"]")?.map { it.text() } ?: emptyList()
+        val duration         = fbox?.select("span")
+            ?.firstOrNull { it.text().contains("Süre:") }
+            ?.text()?.filter { it.isDigit() }?.toIntOrNull()
+        val recommendations  = document.select("div.fgrid a.card-link").mapNotNull { it.toMainPageResult() }
+        val actors           = fbox?.select("div.fbox-kadro span.fk-t b")?.map { Actor(it.text()) } ?: emptyList()
+        val trailer          = Regex("""embed/(.*)\?rel""").find(document.html())?.groupValues?.get(1)?.let { "https://www.youtube.com/embed/$it" }
 
         if (url.contains("/dizi/")) {
-            year     = document.selectFirst("a[href*='/yil/']")?.text()?.trim()?.toIntOrNull()
-            duration = document.selectFirst("div#info span:containsOwn(Dakika)")?.text()?.split(" ")?.first()?.trim()?.toIntOrNull()
-
-            val episodes = document.select("div#episodes ul.episodios li").mapNotNull {
-                val epHref    = fixUrlNull(it.selectFirst("h4.episodiotitle a")?.attr("href")) ?: return@mapNotNull null
-                val epName    = it.selectFirst("h4.episodiotitle a")?.ownText()?.trim() ?: return@mapNotNull null
-                val epDetail  = it.selectFirst("h4.episodiotitle a")?.ownText()?.trim() ?: return@mapNotNull null
-                val epSeason  = epDetail.substringBefore(". Sezon").toIntOrNull()
-                val epEpisode = epDetail.split("Sezon ").last().substringBefore(". Bölüm").toIntOrNull()
+            // ! Bölümler » div.tv-seasons > div.season-panel[data-season] > div.fep-grid > a.fep
+            // ! Bölüm adresleri artık /bolum/<slug>-<sezon>-sezon-<bolum>-bolum/ biçiminde.
+            val episodes = document.select("div.tv-seasons a.fep").mapNotNull { ep ->
+                val epHref   = fixUrlNull(ep.attr("href")) ?: return@mapNotNull null
+                val epTitle  = ep.selectFirst("div.fep-title")?.text()?.trim()
+                val epSeason = ep.closest("div.season-panel")?.attr("data-season")?.toIntOrNull()
+                    ?: Regex("""-(\d+)-sezon-""").find(epHref)?.groupValues?.get(1)?.toIntOrNull()
+                val epEpisode = Regex("""-sezon-(\d+)-bolum""").find(epHref)?.groupValues?.get(1)?.toIntOrNull()
 
                 newEpisode(epHref) {
-                    this.name    = epName
+                    this.name    = epTitle
                     this.season  = epSeason
                     this.episode = epEpisode
                 }
@@ -152,78 +154,96 @@ class SetFilmIzle : MainAPI() {
         }
     }
 
-    private fun Element.toRecommendationResult(): SearchResponse? {
-        val title     = this.selectFirst("a img")?.attr("alt") ?: return null
-        val href      = fixUrlNull(this.selectFirst("a")?.attr("href")) ?: return null
-        val posterUrl = fixUrlNull(this.selectFirst("a img")?.attr("data-src"))
+    private fun String.toJsStringLiteral(): String =
+        "\"" + this.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
 
-        return if (href.contains("/dizi/")) {
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) { this.posterUrl = posterUrl }
-        } else {
-            newMovieSearchResponse(title, href, TvType.Movie) { this.posterUrl = posterUrl }
-        }
-    }
-
-    private fun sendMultipartRequest(nonce: String, postId: String, playerName: String, partKey: String, referer: String): Response {
-        val formData = mapOf(
-            "action"      to "get_video_url",
-            "nonce"       to nonce,
-            "post_id"     to postId,
-            "player_name" to playerName,
-            "part_key"    to partKey
-        )
-
-        val requestBody = MultipartBody.Builder().setType(MultipartBody.FORM).apply {
-            formData.forEach { (key, value) -> addFormDataPart(key, value) }
-        }.build()
-
-        val headers = mapOf(
-            "Referer"          to referer,
-            "X-Requested-With" to "XMLHttpRequest"
-        )
-
-        val request = Request.Builder().url("${mainUrl}/wp-admin/admin-ajax.php").post(requestBody).apply {
-            headers.forEach { (key, value) -> addHeader(key, value) }
-        }.build()
-
-        val client = OkHttpClient()
-
-        return client.newCall(request).execute()
-    }
-
+    /**
+     * ! Yeni temada (wp-theme-setfilm) video adresi artık sunucudan AJAX ile alınmıyor;
+     * ! sayfadaki JS (movie.js) tarayıcıda çalışırken imzalı bir token üretip
+     * ! "https://setplay.shop/player/stfplay.php?t=...&p=...&a=...&av=..." adresini
+     * ! doğrudan bir <iframe> olarak sayfaya basıyor. Bu token JS çalıştırmadan
+     * ! (yani düz Jsoup/Regex ile) elde edilemiyor, bu yüzden burada gerçek bir
+     * ! WebView açıp ilgili "SetPlay" / "FastPlay" sekmesine tıklayarak
+     * ! oluşan isteği yakalıyoruz (bkz: WebViewResolver).
+     */
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        Log.d("STF", "data » $data")
         val document = app.get(data).document
+        val sources  = document.select("#stfPlayer .fsrc.src-tab").map {
+            it.attr("data-player-name") to it.attr("data-part-key")
+        }.ifEmpty { listOf("" to "") }
 
-        document.select("nav.player a").map { element ->
-            val sourceId = element.attr("data-post-id")
-            val name = element.attr("data-player-name")
-            val partKey = element.attr("data-part-key").takeIf { it.isNotEmpty() }
-
-            Triple(name, sourceId, partKey)
-        }.forEach { (name, sourceId, partKey) ->
-            if (sourceId.contains("event")) return@forEach
-            if (sourceId == "") return@forEach
-
-            val nonce = document.selectFirst("div#playex")?.attr("data-nonce") ?: ""
-            val multiPart = sendMultipartRequest(nonce, sourceId, name, partKey ?: "", data)
-            val sourceBody = multiPart.body.string()
-            val sourceIframe = JSONObject(sourceBody).optJSONObject("data")?.optString("url") ?: return@forEach
-
-            Log.d("STF", "iframe » $sourceIframe")
-
-            val finalUrl = if (sourceIframe.contains("setplay")) {
-                sourceIframe
-            } else {
-                if (partKey != null) "$sourceIframe?partKey=$partKey" else sourceIframe
+        for ((playerName, partKey) in sources) {
+            val suffix = when {
+                partKey.contains("turkcedublaj", ignoreCase = true)  -> "Dublaj"
+                partKey.contains("turkcealtyazi", ignoreCase = true) -> "Altyazı"
+                partKey.isNotBlank()                                 -> partKey
+                else                                                 -> null
             }
 
-            loadExtractor(finalUrl, "$mainUrl/", subtitleCallback, callback)
+            val clickScript = """
+                (function(){
+                    if (window.__stfClicked) return;
+                    var btns = document.querySelectorAll('.fsrc.src-tab');
+                    var target = null;
+                    for (var i = 0; i < btns.length; i++) {
+                        var b = btns[i];
+                        if (b.getAttribute('data-player-name') === ${playerName.toJsStringLiteral()} &&
+                            b.getAttribute('data-part-key') === ${partKey.toJsStringLiteral()}) {
+                            target = b;
+                            break;
+                        }
+                    }
+                    if (!target) target = document.querySelector('.fsrc.src-tab, .fplayer-before');
+                    if (target) { window.__stfClicked = true; target.click(); }
+                })();
+            """.trimIndent()
+
+            val resolver = WebViewResolver(
+                interceptUrl   = Regex("""setplay\.shop|fastplay\.mom"""),
+                additionalUrls = listOf(Regex("""setplay\.shop|fastplay\.mom""")),
+                useOkhttp      = false,
+                script         = clickScript,
+                timeout        = 20_000L
+            )
+
+            val resolvedUrl = try {
+                app.get(data, referer = mainUrl, interceptor = resolver).url
+            } catch (e: Exception) {
+                Log.e("STF", "WebView çözümleme hatası ($playerName/$partKey) » ${e.message}")
+                ""
+            }
+
+            if (resolvedUrl.isBlank()) continue
+
+            Log.d("STF", "Çözümlenen oynatıcı adresi » $resolvedUrl")
+
+            val wrappedCallback: (ExtractorLink) -> Unit = { link ->
+                @Suppress("DEPRECATION")
+                callback(
+                    ExtractorLink(
+                        source        = link.source,
+                        name          = if (suffix != null) "${link.source} - $suffix" else link.name,
+                        url           = link.url,
+                        referer       = link.referer,
+                        quality       = link.quality,
+                        headers       = link.headers,
+                        extractorData = link.extractorData,
+                        type          = link.type,
+                        audioTracks   = link.audioTracks
+                    )
+                )
+            }
+
+            when {
+                resolvedUrl.contains("setplay.shop")  -> SetPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                resolvedUrl.contains("fastplay.mom")  -> FastPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                else                                   -> loadExtractor(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+            }
         }
 
         return true
