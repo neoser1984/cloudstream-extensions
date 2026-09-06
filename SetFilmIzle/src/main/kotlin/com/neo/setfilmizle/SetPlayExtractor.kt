@@ -31,9 +31,24 @@ open class SetPlay : ExtractorApi() {
         val iSource = response.text
         val cookies = response.headers.values("Set-Cookie").joinToString("; ") { it.substringBefore(";") }
 
+        // ! TANI (debug) modu: "Player konfigurasyonu bulunamadı" hatasının asıl sebebini görmek için,
+        // ! regex eşleşmediğinde direkt hata fırlatmak yerine köprü sayfasının HTTP kodunu ve
+        // ! gövdesinin başını kaynak listesinde sahte bir "TANI" satırı olarak bildiriyoruz.
+        // ! Sorun çözülünce kaldırılacak.
         val jsonString = Regex("""FirePlayer\([^,]+,\s*(\{.*?\})\s*,\s*(?:true|false)\)""", setOf(RegexOption.DOT_MATCHES_ALL))
             .find(iSource)?.groupValues?.get(1)
-            ?: throw ErrorLoadingException("Player konfigurasyonu bulunamadı")
+
+        if (jsonString == null) {
+            callback.invoke(
+                newExtractorLink(
+                    source = "STF-TANI",
+                    name   = "TANI» köprü kod=${response.code} uzunluk=${iSource.length} gövde=${iSource.take(200).replace("\n", " ")}",
+                    url    = "$mainUrl/#tani",
+                    type   = ExtractorLinkType.M3U8
+                ) { quality = Qualities.Unknown.value }
+            )
+            return
+        }
 
         val json = AppUtils.parseJson<Map<String, Any>>(jsonString)
 
