@@ -15,9 +15,16 @@ open class SetPlay : ExtractorApi() {
         val response = app.get(
             url = url,
             headers = mapOf(
-                "User-Agent" to userAgent,
-                "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-                "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7"
+                "User-Agent"      to userAgent,
+                "Accept"          to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+                // ! Sunucu, bu adresin YALNIZCA bir <iframe> içinden yüklendiğini doğruluyor;
+                // ! doğrudan (üst seviye) istekleri 404 ile reddediyor. Tarayıcı ile doğrulandı:
+                // ! aynı adres iframe içinde 200, sekmede doğrudan açılınca 404 dönüyor — tek fark
+                // ! Fetch Metadata başlıkları. Bu yüzden burada iframe isteğini taklit ediyoruz.
+                "Sec-Fetch-Dest"  to "iframe",
+                "Sec-Fetch-Mode"  to "navigate",
+                "Sec-Fetch-Site"  to "cross-site"
             ),
             referer = referer
         )
