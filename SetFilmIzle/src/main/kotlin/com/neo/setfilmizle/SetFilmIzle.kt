@@ -1,5 +1,5 @@
 // ! Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
-// ! Yeni tema (wp-theme-setfilm) uyumluluğu ve WebView tabanlı oynatıcı çözümü NeO tarafından eklenmiştir.
+// ! Yeni tema (wp-theme-setfilm) uyumluluğu NeO tarafından eklenmiştir.
 
 package com.neo.setfilmizle
 
@@ -7,7 +7,6 @@ import android.util.Log
 import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
-import com.lagradost.cloudstream3.network.WebViewResolver
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import org.json.JSONObject
@@ -154,17 +153,12 @@ class SetFilmIzle : MainAPI() {
         }
     }
 
-    private fun String.toJsStringLiteral(): String =
-        "\"" + this.replace("\\", "\\\\").replace("\"", "\\\"") + "\""
-
     /**
-     * ! Yeni temada (wp-theme-setfilm) video adresi artık sunucudan AJAX ile alınmıyor;
-     * ! sayfadaki JS (movie.js) tarayıcıda çalışırken imzalı bir token üretip
-     * ! "https://setplay.shop/player/stfplay.php?t=...&p=...&a=...&av=..." adresini
-     * ! doğrudan bir <iframe> olarak sayfaya basıyor. Bu token JS çalıştırmadan
-     * ! (yani düz Jsoup/Regex ile) elde edilemiyor, bu yüzden burada gerçek bir
-     * ! WebView açıp ilgili "SetPlay" / "FastPlay" sekmesine tıklayarak
-     * ! oluşan isteği yakalıyoruz (bkz: WebViewResolver).
+     * ! Yeni temada (wp-theme-setfilm) video adresi, sayfaya gömülü "window.STF_AJAX" nesnesindeki
+     * ! nonce kullanılarak "wp-admin/admin-ajax.php" adresine "action=get_video_url" ile atılan
+     * ! düz bir POST isteğiyle alınıyor (eskisiyle aynı mantık, sadece nonce'un kaynağı değişmiş).
+     * ! Bu yüzden WebView'e ya da JS çalıştırmaya hiç gerek yok — TV kutuları/Android TV gibi
+     * ! WebView bileşeni sağlıklı çalışmayan cihazlarda da sorunsuz çalışır.
      */
     override suspend fun loadLinks(
         data: String,
@@ -172,28 +166,36 @@ class SetFilmIzle : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val browserHeaders = mapOf(
-            "User-Agent"      to "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
-            "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7"
-        )
-
-        val document = try {
-            app.get(data, headers = browserHeaders, referer = mainUrl).document
+        val response = try {
+            app.get(data, referer = mainUrl)
         } catch (e: Throwable) {
             Log.e("STF", "loadLinks » sayfa alınamadı » ${e.message}")
-            null
+            return false
+        }
+        val document = response.document
+        val html     = response.text
+
+        val postId = document.selectFirst("#stfPlayer")?.attr("data-post-id")
+        val nonce  = Regex("""video\s*:\s*"([0-9a-f]+)"""").find(html)?.groupValues?.get(1)
+        val ajaxUrl = Regex("""url\s*:\s*"([^"]*admin-ajax\.php)"""").find(html)?.groupValues?.get(1)
+            ?: "$mainUrl/wp-admin/admin-ajax.php"
+
+        if (postId.isNullOrBlank() || nonce.isNullOrBlank()) {
+            Log.e("STF", "loadLinks » postId veya nonce bulunamadı (postId=$postId, nonce=$nonce)")
+            return false
         }
 
-        val stfPlayerFound = document?.selectFirst("#stfPlayer") != null
-        val sources = document?.select("#stfPlayer .fsrc.src-tab")?.map {
+        val sources = document.select("#stfPlayer .fsrc.src-tab").map {
             it.attr("data-player-name") to it.attr("data-part-key")
-        }?.ifEmpty { listOf("" to "") } ?: listOf("" to "")
+        }.ifEmpty { listOf("SetPlay" to "") }
 
-        Log.d("STF", "loadLinks » #stfPlayer bulundu mu: $stfPlayerFound, kaynak sayısı: ${sources.size}")
+        Log.d("STF", "loadLinks » postId=$postId, kaynak sayısı=${sources.size}")
 
         var anyLinkFound = false
 
         for ((playerName, partKey) in sources) {
+            if (playerName.isBlank()) continue
+
             try {
                 val suffix = when {
                     partKey.contains("turkcedublaj", ignoreCase = true)  -> "Dublaj"
@@ -202,46 +204,40 @@ class SetFilmIzle : MainAPI() {
                     else                                                 -> null
                 }
 
-                val clickScript = """
-                    (function(){
-                        if (window.__stfClicked) return;
-                        var btns = document.querySelectorAll('.fsrc.src-tab');
-                        var target = null;
-                        for (var i = 0; i < btns.length; i++) {
-                            var b = btns[i];
-                            if (b.getAttribute('data-player-name') === ${playerName.toJsStringLiteral()} &&
-                                b.getAttribute('data-part-key') === ${partKey.toJsStringLiteral()}) {
-                                target = b;
-                                break;
-                            }
-                        }
-                        if (!target) target = document.querySelector('.fsrc.src-tab, .fplayer-before');
-                        if (target) { window.__stfClicked = true; target.click(); }
-                    })();
-                """.trimIndent()
-
-                val resolver = WebViewResolver(
-                    interceptUrl   = Regex("""setplay\.shop/player/stfplay\.php|fastplay\.mom"""),
-                    additionalUrls = listOf(Regex("""setplay\.shop/player/stfplay\.php|fastplay\.mom""")),
-                    useOkhttp      = false,
-                    userAgent      = browserHeaders["User-Agent"],
-                    script         = clickScript,
-                    timeout        = 25_000L
+                val ajaxResponse = app.post(
+                    url     = ajaxUrl,
+                    referer = data,
+                    data    = mapOf(
+                        "action"      to "get_video_url",
+                        "nonce"       to nonce,
+                        "post_id"     to postId,
+                        "player_name" to playerName,
+                        "part_key"    to partKey
+                    )
                 )
 
-                val resolvedUrl = try {
-                    app.get(data, referer = mainUrl, interceptor = resolver).url
-                } catch (e: Throwable) {
-                    Log.e("STF", "WebView çözümleme hatası ($playerName/$partKey) » ${e::class.simpleName}: ${e.message}")
-                    ""
-                }
-
-                if (resolvedUrl.isBlank()) {
-                    Log.d("STF", "WebView » ($playerName/$partKey) için adres bulunamadı (zaman aşımı olabilir)")
+                val json = JSONObject(ajaxResponse.text)
+                if (!json.optBoolean("success")) {
+                    Log.d("STF", "loadLinks » ($playerName/$partKey) başarısız cevap » ${ajaxResponse.text.take(200)}")
                     continue
                 }
 
-                Log.d("STF", "Çözümlenen oynatıcı adresi » $resolvedUrl")
+                val dataObj = json.optJSONObject("data")
+                val stream  = dataObj?.optJSONObject("stream")
+                val resolvedUrl = when {
+                    stream != null && stream.optString("url").isNotBlank()  -> stream.optString("url")
+                    dataObj?.optString("src")?.isNotBlank() == true         -> dataObj.optString("src")
+                    dataObj?.optString("url")?.isNotBlank() == true         -> dataObj.optString("url")
+                    else                                                     -> null
+                }
+                val provider = stream?.optString("provider")?.takeIf { it.isNotBlank() }
+
+                if (resolvedUrl.isNullOrBlank()) {
+                    Log.d("STF", "loadLinks » ($playerName/$partKey) için oynatma adresi yok")
+                    continue
+                }
+
+                Log.d("STF", "Çözümlenen oynatıcı adresi » $resolvedUrl (provider=$provider)")
 
                 val wrappedCallback: (ExtractorLink) -> Unit = { link ->
                     anyLinkFound = true
@@ -262,9 +258,12 @@ class SetFilmIzle : MainAPI() {
                 }
 
                 when {
-                    resolvedUrl.contains("setplay.shop")  -> SetPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
-                    resolvedUrl.contains("fastplay.mom")  -> FastPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
-                    else                                   -> loadExtractor(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                    provider.equals("setplay", ignoreCase = true) || resolvedUrl.contains("setplay.shop") ->
+                        SetPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                    provider.equals("fastplay", ignoreCase = true) || resolvedUrl.contains("fastplay.mom") ->
+                        FastPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                    else ->
+                        loadExtractor(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
                 }
             } catch (e: Throwable) {
                 Log.e("STF", "loadLinks » kaynak işlenirken hata ($playerName/$partKey) » ${e::class.simpleName}: ${e.message}")
