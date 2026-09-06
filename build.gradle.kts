@@ -10,11 +10,18 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
-        // ! JitPack'in "master-SNAPSHOT" floating sürümü şu an bozuk metadata üretiyor
-        // ! (bkz: inconsistent module metadata / "master-aster-SNAPSHOT" hatası).
-        // ! Bu yüzden en son master commit'ine (32895aedb6) sabit sürüm olarak bağlandık.
-        // ! JitPack düzelince tekrar "master-SNAPSHOT" yapılabilir.
-        classpath("com.github.recloudstream.gradle:gradle:master-32895aedb6-1")
+        // ! JitPack'in "com.github.recloudstream.gradle:gradle" üzerindeki HER sürümü
+        // ! (hem "master-SNAPSHOT" hem sabit commit sürümleri) şu an bozuk metadata
+        // ! üretiyor ve derlemeyi engelliyor (bkz: inconsistent module metadata /
+        // ! "master-aster-SNAPSHOT" hatası). Bu yüzden JitPack'e artık hiç güvenmiyoruz:
+        // ! CI, bu eklentiyi kaynağından (recloudstream/gradle) kendi derleyip
+        // ! local-libs/cloudstream-gradle-plugin.jar olarak buraya koyuyor
+        // ! (bkz: .github/workflows/Derleyici.yml). Yerelde derlerken bu jar yoksa
+        // ! önce recloudstream/gradle'ı klonlayıp "./gradlew jar" ile üretmen gerekir.
+        classpath(files("local-libs/cloudstream-gradle-plugin.jar"))
+        classpath("org.ow2.asm:asm:9.9.1")
+        classpath("org.ow2.asm:asm-tree:9.9.1")
+        classpath("com.github.vidstige:jadb:v1.2.1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
     }
 }
