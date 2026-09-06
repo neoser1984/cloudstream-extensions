@@ -172,79 +172,106 @@ class SetFilmIzle : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val document = app.get(data).document
-        val sources  = document.select("#stfPlayer .fsrc.src-tab").map {
+        val browserHeaders = mapOf(
+            "User-Agent"      to "Mozilla/5.0 (Linux; Android 13; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Mobile Safari/537.36",
+            "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7"
+        )
+
+        val document = try {
+            app.get(data, headers = browserHeaders, referer = mainUrl).document
+        } catch (e: Throwable) {
+            Log.e("STF", "loadLinks » sayfa alınamadı » ${e.message}")
+            null
+        }
+
+        val stfPlayerFound = document?.selectFirst("#stfPlayer") != null
+        val sources = document?.select("#stfPlayer .fsrc.src-tab")?.map {
             it.attr("data-player-name") to it.attr("data-part-key")
-        }.ifEmpty { listOf("" to "") }
+        }?.ifEmpty { listOf("" to "") } ?: listOf("" to "")
+
+        Log.d("STF", "loadLinks » #stfPlayer bulundu mu: $stfPlayerFound, kaynak sayısı: ${sources.size}")
+
+        var anyLinkFound = false
 
         for ((playerName, partKey) in sources) {
-            val suffix = when {
-                partKey.contains("turkcedublaj", ignoreCase = true)  -> "Dublaj"
-                partKey.contains("turkcealtyazi", ignoreCase = true) -> "Altyazı"
-                partKey.isNotBlank()                                 -> partKey
-                else                                                 -> null
-            }
+            try {
+                val suffix = when {
+                    partKey.contains("turkcedublaj", ignoreCase = true)  -> "Dublaj"
+                    partKey.contains("turkcealtyazi", ignoreCase = true) -> "Altyazı"
+                    partKey.isNotBlank()                                 -> partKey
+                    else                                                 -> null
+                }
 
-            val clickScript = """
-                (function(){
-                    if (window.__stfClicked) return;
-                    var btns = document.querySelectorAll('.fsrc.src-tab');
-                    var target = null;
-                    for (var i = 0; i < btns.length; i++) {
-                        var b = btns[i];
-                        if (b.getAttribute('data-player-name') === ${playerName.toJsStringLiteral()} &&
-                            b.getAttribute('data-part-key') === ${partKey.toJsStringLiteral()}) {
-                            target = b;
-                            break;
+                val clickScript = """
+                    (function(){
+                        if (window.__stfClicked) return;
+                        var btns = document.querySelectorAll('.fsrc.src-tab');
+                        var target = null;
+                        for (var i = 0; i < btns.length; i++) {
+                            var b = btns[i];
+                            if (b.getAttribute('data-player-name') === ${playerName.toJsStringLiteral()} &&
+                                b.getAttribute('data-part-key') === ${partKey.toJsStringLiteral()}) {
+                                target = b;
+                                break;
+                            }
                         }
-                    }
-                    if (!target) target = document.querySelector('.fsrc.src-tab, .fplayer-before');
-                    if (target) { window.__stfClicked = true; target.click(); }
-                })();
-            """.trimIndent()
+                        if (!target) target = document.querySelector('.fsrc.src-tab, .fplayer-before');
+                        if (target) { window.__stfClicked = true; target.click(); }
+                    })();
+                """.trimIndent()
 
-            val resolver = WebViewResolver(
-                interceptUrl   = Regex("""setplay\.shop|fastplay\.mom"""),
-                additionalUrls = listOf(Regex("""setplay\.shop|fastplay\.mom""")),
-                useOkhttp      = false,
-                script         = clickScript,
-                timeout        = 20_000L
-            )
-
-            val resolvedUrl = try {
-                app.get(data, referer = mainUrl, interceptor = resolver).url
-            } catch (e: Exception) {
-                Log.e("STF", "WebView çözümleme hatası ($playerName/$partKey) » ${e.message}")
-                ""
-            }
-
-            if (resolvedUrl.isBlank()) continue
-
-            Log.d("STF", "Çözümlenen oynatıcı adresi » $resolvedUrl")
-
-            val wrappedCallback: (ExtractorLink) -> Unit = { link ->
-                @Suppress("DEPRECATION")
-                callback(
-                    ExtractorLink(
-                        source        = link.source,
-                        name          = if (suffix != null) "${link.source} - $suffix" else link.name,
-                        url           = link.url,
-                        referer       = link.referer,
-                        quality       = link.quality,
-                        headers       = link.headers,
-                        extractorData = link.extractorData,
-                        type          = link.type,
-                        audioTracks   = link.audioTracks
-                    )
+                val resolver = WebViewResolver(
+                    interceptUrl   = Regex("""setplay\.shop/player/stfplay\.php|fastplay\.mom"""),
+                    additionalUrls = listOf(Regex("""setplay\.shop/player/stfplay\.php|fastplay\.mom""")),
+                    useOkhttp      = false,
+                    userAgent      = browserHeaders["User-Agent"],
+                    script         = clickScript,
+                    timeout        = 25_000L
                 )
-            }
 
-            when {
-                resolvedUrl.contains("setplay.shop")  -> SetPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
-                resolvedUrl.contains("fastplay.mom")  -> FastPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
-                else                                   -> loadExtractor(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                val resolvedUrl = try {
+                    app.get(data, referer = mainUrl, interceptor = resolver).url
+                } catch (e: Throwable) {
+                    Log.e("STF", "WebView çözümleme hatası ($playerName/$partKey) » ${e::class.simpleName}: ${e.message}")
+                    ""
+                }
+
+                if (resolvedUrl.isBlank()) {
+                    Log.d("STF", "WebView » ($playerName/$partKey) için adres bulunamadı (zaman aşımı olabilir)")
+                    continue
+                }
+
+                Log.d("STF", "Çözümlenen oynatıcı adresi » $resolvedUrl")
+
+                val wrappedCallback: (ExtractorLink) -> Unit = { link ->
+                    anyLinkFound = true
+                    @Suppress("DEPRECATION")
+                    callback(
+                        ExtractorLink(
+                            source        = link.source,
+                            name          = if (suffix != null) "${link.source} - $suffix" else link.name,
+                            url           = link.url,
+                            referer       = link.referer,
+                            quality       = link.quality,
+                            headers       = link.headers,
+                            extractorData = link.extractorData,
+                            type          = link.type,
+                            audioTracks   = link.audioTracks
+                        )
+                    )
+                }
+
+                when {
+                    resolvedUrl.contains("setplay.shop")  -> SetPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                    resolvedUrl.contains("fastplay.mom")  -> FastPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                    else                                   -> loadExtractor(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                }
+            } catch (e: Throwable) {
+                Log.e("STF", "loadLinks » kaynak işlenirken hata ($playerName/$partKey) » ${e::class.simpleName}: ${e.message}")
             }
         }
+
+        Log.d("STF", "loadLinks » toplam bağlantı bulundu mu: $anyLinkFound")
 
         return true
     }
