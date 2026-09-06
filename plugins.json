@@ -394,10 +394,10 @@
     },
     {
         "iconUrl": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh3vCp6N1K4bECoYRQD-cisJF2_6V_Hk01ZhDmoPR2JuM8O5qr4MqrPO1munM9cRlleBBSK6odYhLtDBWv4E3vhPhynlmS5hVVtJZShHoGA5REQ8_3v8SIlccTEqzVQu2UJyNYQdJNrKIfWy66RQeT0D-CcmFCbHPz5023H6p2v5fv4NVloZ5Rqo_yGrIY/s320/iNat-Box-App.png",
-        "fileHash": "sha256-220d119e753d3588c3ff027f45e037d07de424baaffa5eb1329ad190d0212560",
+        "fileHash": "sha256-a5179319edad753acfe168678b07699e71dca7e5dff86cc468db6c6d409364db",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 47691,
+        "fileSize": 36584,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -409,7 +409,7 @@
             "TvSeries",
             "Live"
         ],
-        "version": 1,
+        "version": 2,
         "internalName": "InatBox",
         "description": "\u0130natBox - Sevdi\u011finiz yay\u0131n platformlar\u0131n\u0131 ve canl\u0131 ma\u00e7lar\u0131 burada bulabilirsiniz.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/InatBox.cs3",
@@ -481,11 +481,11 @@
         "name": "SelcukFlix"
     },
     {
-        "iconUrl": "https://www.google.com/s2/favicons?domain=www.setfilmizle.uk&sz=%size%",
-        "fileHash": "sha256-7e7dac1edb39e175ba5833c2b07f3f2515d6605f29e5ba7e80dca5628164b982",
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.setfilmizle.ltd&sz=%size%",
+        "fileHash": "sha256-99856098cf110d5f8ef697dc02d76d0fd8fa79652213e9427bbff9d789a29474",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 24727,
+        "fileSize": 26204,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -496,7 +496,7 @@
             "Movie",
             "TvSeries"
         ],
-        "version": 1,
+        "version": 3,
         "internalName": "SetFilmIzle",
         "description": "Setfilmizle sitesinde, donma ya\u015famadan T\u00fcrk\u00e7e dublaj ve altyaz\u0131l\u0131 filmleri ile dizileri 1080p full HD kalitesinde izleyebilirsiniz.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/SetFilmIzle.cs3",
