@@ -166,11 +166,15 @@ class SetFilmIzle : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
+        // ! TANI (debug) modu: TV/kutu cihazlarda logcat'e erişimimiz olmadığı için,
+        // ! link bulunamadığında CloudStream'in kendi hata penceresinde görünecek şekilde
+        // ! ErrorLoadingException fırlatıyoruz — böylece asıl sebep ekrana düşüyor.
+        val errors = mutableListOf<String>()
+
         val response = try {
             app.get(data, referer = mainUrl)
         } catch (e: Throwable) {
-            Log.e("STF", "loadLinks » sayfa alınamadı » ${e.message}")
-            return false
+            throw ErrorLoadingException("STF» sayfa alınamadı: ${e::class.simpleName}: ${e.message}")
         }
         val document = response.document
         val html     = response.text
@@ -181,8 +185,10 @@ class SetFilmIzle : MainAPI() {
             ?: "$mainUrl/wp-admin/admin-ajax.php"
 
         if (postId.isNullOrBlank() || nonce.isNullOrBlank()) {
-            Log.e("STF", "loadLinks » postId veya nonce bulunamadı (postId=$postId, nonce=$nonce)")
-            return false
+            throw ErrorLoadingException(
+                "STF» postId/nonce bulunamadı » kod=${response.code}, postId=$postId, " +
+                "nonce=${if (nonce.isNullOrBlank()) "yok" else "var"}, sayfaUzunluk=${html.length}"
+            )
         }
 
         val sources = document.select("#stfPlayer .fsrc.src-tab").map {
@@ -207,6 +213,7 @@ class SetFilmIzle : MainAPI() {
                 val ajaxResponse = app.post(
                     url     = ajaxUrl,
                     referer = data,
+                    headers = mapOf("X-Requested-With" to "XMLHttpRequest"),
                     data    = mapOf(
                         "action"      to "get_video_url",
                         "nonce"       to nonce,
@@ -216,9 +223,15 @@ class SetFilmIzle : MainAPI() {
                     )
                 )
 
-                val json = JSONObject(ajaxResponse.text)
+                val json = try {
+                    JSONObject(ajaxResponse.text)
+                } catch (e: Throwable) {
+                    errors += "$playerName» ajax cevabı JSON değil » kod=${ajaxResponse.code}, gövde=${ajaxResponse.text.take(120)}"
+                    continue
+                }
+
                 if (!json.optBoolean("success")) {
-                    Log.d("STF", "loadLinks » ($playerName/$partKey) başarısız cevap » ${ajaxResponse.text.take(200)}")
+                    errors += "$playerName» ajax success=false » kod=${ajaxResponse.code}, gövde=${ajaxResponse.text.take(150)}"
                     continue
                 }
 
@@ -233,7 +246,7 @@ class SetFilmIzle : MainAPI() {
                 val provider = stream?.optString("provider")?.takeIf { it.isNotBlank() }
 
                 if (resolvedUrl.isNullOrBlank()) {
-                    Log.d("STF", "loadLinks » ($playerName/$partKey) için oynatma adresi yok")
+                    errors += "$playerName» ajax success=true ama oynatma adresi yok » gövde=${ajaxResponse.text.take(150)}"
                     continue
                 }
 
@@ -257,20 +270,31 @@ class SetFilmIzle : MainAPI() {
                     )
                 }
 
-                when {
-                    provider.equals("setplay", ignoreCase = true) || resolvedUrl.contains("setplay.shop") ->
-                        SetPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
-                    provider.equals("fastplay", ignoreCase = true) || resolvedUrl.contains("fastplay.mom") ->
-                        FastPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
-                    else ->
-                        loadExtractor(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                try {
+                    when {
+                        provider.equals("setplay", ignoreCase = true) || resolvedUrl.contains("setplay.shop") ->
+                            SetPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                        provider.equals("fastplay", ignoreCase = true) || resolvedUrl.contains("fastplay.mom") ->
+                            FastPlay().getUrl(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                        else ->
+                            loadExtractor(resolvedUrl, "$mainUrl/", subtitleCallback, wrappedCallback)
+                    }
+                } catch (e: Throwable) {
+                    errors += "$playerName» çözümleyici (${provider ?: "?"}) hata » ${e::class.simpleName}: ${e.message}"
                 }
             } catch (e: Throwable) {
-                Log.e("STF", "loadLinks » kaynak işlenirken hata ($playerName/$partKey) » ${e::class.simpleName}: ${e.message}")
+                errors += "$playerName» genel hata » ${e::class.simpleName}: ${e.message}"
             }
         }
 
-        Log.d("STF", "loadLinks » toplam bağlantı bulundu mu: $anyLinkFound")
+        Log.d("STF", "loadLinks » toplam bağlantı bulundu mu: $anyLinkFound » hatalar: $errors")
+
+        if (!anyLinkFound) {
+            throw ErrorLoadingException(
+                if (errors.isNotEmpty()) "STF» " + errors.joinToString(" || ").take(400)
+                else "STF» kaynak listesi boş (sources=${sources.size})"
+            )
+        }
 
         return true
     }
