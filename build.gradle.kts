@@ -10,7 +10,11 @@ buildscript {
 
     dependencies {
         classpath("com.android.tools.build:gradle:8.7.3")
-        classpath("com.github.recloudstream.gradle:gradle:master-SNAPSHOT")
+        // ! JitPack'in "master-SNAPSHOT" floating sürümü şu an bozuk metadata üretiyor
+        // ! (bkz: inconsistent module metadata / "master-aster-SNAPSHOT" hatası).
+        // ! Bu yüzden en son master commit'ine (32895aedb6) sabit sürüm olarak bağlandık.
+        // ! JitPack düzelince tekrar "master-SNAPSHOT" yapılabilir.
+        classpath("com.github.recloudstream.gradle:gradle:master-32895aedb6-1")
         classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.4.0")
     }
 }
