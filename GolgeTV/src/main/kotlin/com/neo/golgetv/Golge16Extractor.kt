@@ -8,6 +8,7 @@ import com.lagradost.cloudstream3.utils.AppUtils
 import com.lagradost.cloudstream3.utils.ExtractorApi
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.newExtractorLink
 
 open class Golge16 : ExtractorApi() {
     override val name = "Golge16"
