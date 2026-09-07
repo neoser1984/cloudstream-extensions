@@ -5,6 +5,7 @@ package com.neo.canlitv
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
@@ -122,15 +123,16 @@ class CanliTV : MainAPI() {
         Log.d("IPTV", "kanal » $kanal")
 
         callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
-            )
+            newExtractorLink(
+                source = this.name,
+                name   = this.name,
+                url    = loadData.url,
+                type   = ExtractorLinkType.M3U8
+            ) {
+                this.referer  = kanal.headers["referrer"] ?: ""
+                this.quality  = Qualities.Unknown.value
+                this.headers  = kanal.headers
+            }
         )
 
         return true
