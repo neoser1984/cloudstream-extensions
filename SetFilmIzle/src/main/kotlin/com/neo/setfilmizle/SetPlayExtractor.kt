@@ -5,6 +5,7 @@ package com.neo.setfilmizle
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 
 open class SetPlay : ExtractorApi() {
