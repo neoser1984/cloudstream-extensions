@@ -482,10 +482,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=www.setfilmizle.ltd&sz=%size%",
-        "fileHash": "sha256-1a2c25919995dc5e3a974ed05d5172aa41ceb51f4897ac9ae3caa6f1d48859be",
+        "fileHash": "sha256-a39b78baa6c379cf0ad8c1ea7180101814d82071dd7ed8e2cf42c9af1eebdc47",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 24334,
+        "fileSize": 26753,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -496,7 +496,7 @@
             "Movie",
             "TvSeries"
         ],
-        "version": 2,
+        "version": 3,
         "internalName": "SetFilmIzle",
         "description": "Setfilmizle sitemizde, donma ya\u015famadan T\u00fcrk\u00e7e dublaj ve altyaz\u0131l\u0131 filmleri ile dizileri muhte\u015fem 1080p full HD kalitesinde izleyebilirsiniz.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/SetFilmIzle.cs3",
