@@ -5,6 +5,7 @@ package com.neo.jetfilmizle
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.newExtractorLink
 
 open class PixelDrain : ExtractorApi() {
     override val name            = "PixelDrain"
