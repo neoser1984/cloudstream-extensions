@@ -103,17 +103,52 @@ open class SetPlay : ExtractorApi() {
             "Sec-Fetch-Site"  to "same-origin"
         )
 
-        // ! NOT: Daha önce burada, manifestin geçerli olup olmadığını görmek için ayrı bir
-        // ! "tanı" isteği (app.get) atılıyordu. ERROR_CODE_IO_BAD_HTTP_STATUS hatasının bu
-        // ! ekstra isteğin linki (muhtemelen tek kullanımlık bir token ile) "tüketmesinden"
-        // ! kaynaklanabileceği görüldü — ExoPlayer aynı linki ikinci kez çekmeye çalışınca
-        // ! sunucu reddediyor olabilir. Bu yüzden manifest artık yalnızca ExoPlayer tarafından,
-        // ! tek seferde çekiliyor; ekstra tanı isteği kaldırıldı.
-        // ! ÖNEMLİ DÜZELTME: headers map'i içindeki "Referer" girdisi CloudStream'in oynatıcısı
-        // ! tarafından kullanılmıyor olabilir — repodaki diğer tüm çalışan extractor'lar ayrıca
-        // ! ayrı bir `this.referer` alanı da ayarlıyor (bkz. FilmMakinesi, DiziPal, SelcukFlix vb.).
-        // ! Bu alan hiç ayarlanmadığı için ExoPlayer muhtemelen Referer'sız istek atıyor ve sunucu
-        // ! bunu reddediyordu (ERROR_CODE_IO_BAD_HTTP_STATUS). Şimdi ikisini de ayarlıyoruz.
+        // ! "Tek kullanımlık link tüketme" ve "referer alanı eksik" teorileri denendi, ikisi de
+        // ! ERROR_CODE_IO_BAD_HTTP_STATUS'ü çözmedi — yani sorun muhtemelen sunucu tarafında
+        // ! (örn. aralıklı bot/rate-limit koruması). Şimdi bu isteği BİZ de ayrıca yapıp gerçek
+        // ! HTTP kodunu ve gövdeyi (parça parça) kaynak listesine "TANI" olarak yazıyoruz —
+        // ! ExoPlayer'ı engellemez, sadece bilgi toplar.
+        try {
+            val manifestCheck = app.get(url = m3uLink, headers = manifestHeaders, referer = url)
+            val body = manifestCheck.text
+            if (!body.trimStart().startsWith("#EXTM3U")) {
+                val flatBody  = body.replace("\n", " ").replace("\r", " ")
+                val chunkSize = 350
+                val maxChunks = 8
+                val totalChunks = minOf(maxChunks, (flatBody.length + chunkSize - 1) / chunkSize)
+
+                callback.invoke(
+                    newExtractorLink(
+                        source = "STF-TANI",
+                        name   = "TANI» manifest kod=${manifestCheck.code} uzunluk=${body.length}",
+                        url    = "$mainUrl/#tani",
+                        type   = ExtractorLinkType.M3U8
+                    ) { quality = Qualities.Unknown.value }
+                )
+                for (i in 0 until totalChunks) {
+                    val start = i * chunkSize
+                    val end   = minOf(start + chunkSize, flatBody.length)
+                    callback.invoke(
+                        newExtractorLink(
+                            source = "STF-TANI",
+                            name   = "TANI-M ${i + 1}/${totalChunks}» ${flatBody.substring(start, end)}",
+                            url    = "$mainUrl/#tani",
+                            type   = ExtractorLinkType.M3U8
+                        ) { quality = Qualities.Unknown.value }
+                    )
+                }
+            }
+        } catch (e: Throwable) {
+            callback.invoke(
+                newExtractorLink(
+                    source = "STF-TANI",
+                    name   = "TANI» manifest hata » ${e::class.simpleName}: ${e.message}",
+                    url    = "$mainUrl/#tani",
+                    type   = ExtractorLinkType.M3U8
+                ) { quality = Qualities.Unknown.value }
+            )
+        }
+
         callback.invoke(
             newExtractorLink(
                 source  = this.name,
