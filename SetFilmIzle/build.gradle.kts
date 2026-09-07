@@ -1,4 +1,4 @@
-version = 12
+version = 13
 
 cloudstream {
     authors     = listOf("murattunc05 (kaynak kod)", "NeO")
