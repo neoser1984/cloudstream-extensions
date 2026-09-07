@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import kotlinx.coroutines.delay
 
 open class SetPlay : ExtractorApi() {
     override val name            = "SetPlay"
@@ -12,24 +13,46 @@ open class SetPlay : ExtractorApi() {
 
     override suspend fun getUrl(url: String, referer: String?, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit) {
         val userAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
-        val response = app.get(
-            url = url,
-            headers = mapOf(
-                "User-Agent"      to userAgent,
-                "Accept"          to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
-                "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
-                // ! Sunucu, bu adresin YALNIZCA bir <iframe> içinden yüklendiğini doğruluyor;
-                // ! doğrudan (üst seviye) istekleri 404 ile reddediyor. Tarayıcı ile doğrulandı:
-                // ! aynı adres iframe içinde 200, sekmede doğrudan açılınca 404 dönüyor — tek fark
-                // ! Fetch Metadata başlıkları. Bu yüzden burada iframe isteğini taklit ediyoruz.
-                "Sec-Fetch-Dest"  to "iframe",
-                "Sec-Fetch-Mode"  to "navigate",
-                "Sec-Fetch-Site"  to "cross-site"
-            ),
-            referer = referer
-        )
-        val iSource = response.text
-        val cookies = response.headers.values("Set-Cookie").joinToString("; ") { it.substringBefore(";") }
+
+        // ! v17: köprü sayfası bazen (aralıklı olarak) FirePlayer(...) yerine bir anti-bot
+        // ! betiği (window.SPG_A={"acik":true,"hedef":"engel.html",...}) döndürüyor — bu, her
+        // ! istekte değil, bazı isteklerde oluyor. Bu yüzden regex eşleşmezse birkaç kez daha
+        // ! (kısa aralıklarla) deniyoruz; belki de geçici/aralıklı bir engelleme.
+        var iSource = ""
+        var cookies = ""
+        var lastCode = 0
+        var attempts = 0
+        val maxAttempts = 3
+        var jsonString: String? = null
+
+        while (attempts < maxAttempts) {
+            attempts++
+            val response = app.get(
+                url = url,
+                headers = mapOf(
+                    "User-Agent"      to userAgent,
+                    "Accept"          to "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                    "Accept-Language" to "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7",
+                    // ! Sunucu, bu adresin YALNIZCA bir <iframe> içinden yüklendiğini doğruluyor;
+                    // ! doğrudan (üst seviye) istekleri 404 ile reddediyor. Tarayıcı ile doğrulandı:
+                    // ! aynı adres iframe içinde 200, sekmede doğrudan açılınca 404 dönüyor — tek fark
+                    // ! Fetch Metadata başlıkları. Bu yüzden burada iframe isteğini taklit ediyoruz.
+                    "Sec-Fetch-Dest"  to "iframe",
+                    "Sec-Fetch-Mode"  to "navigate",
+                    "Sec-Fetch-Site"  to "cross-site"
+                ),
+                referer = referer
+            )
+            iSource  = response.text
+            cookies  = response.headers.values("Set-Cookie").joinToString("; ") { it.substringBefore(";") }
+            lastCode = response.code
+
+            jsonString = Regex("""FirePlayer\([^,]+,\s*(\{.*?\})\s*,\s*(?:true|false)\)""", setOf(RegexOption.DOT_MATCHES_ALL))
+                .find(iSource)?.groupValues?.get(1)
+
+            if (jsonString != null) break
+            if (attempts < maxAttempts) delay(900)
+        }
 
         // ! TANI (debug) modu: v15'te tanı metinlerini sahte ExtractorLink olarak "Kaynaklar"
         // ! listesine ekliyorduk, ama bu CloudStream'in kaynak/dublaj seçim mantığını bozup
@@ -56,11 +79,8 @@ open class SetPlay : ExtractorApi() {
             }
         }
 
-        val jsonString = Regex("""FirePlayer\([^,]+,\s*(\{.*?\})\s*,\s*(?:true|false)\)""", setOf(RegexOption.DOT_MATCHES_ALL))
-            .find(iSource)?.groupValues?.get(1)
-
         if (jsonString == null) {
-            emitTani("TANI-B» köprü kod=${response.code} uzunluk=${iSource.length} »", iSource)
+            emitTani("TANI-B» ${attempts}/${maxAttempts} deneme, son kod=${lastCode} uzunluk=${iSource.length} »", iSource)
             return
         }
 
