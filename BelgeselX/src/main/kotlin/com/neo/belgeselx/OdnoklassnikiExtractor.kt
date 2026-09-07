@@ -41,13 +41,15 @@ open class Odnoklassniki : ExtractorApi() {
 
             callback.invoke(
                 newExtractorLink(
-                    source  = this.name,
-                    name    = this.name,
-                    url     = videoUrl,
-                    referer = url,
-                    quality = getQualityFromName(quality),
-                    headers = userAgent,
-                )
+                    source = this.name,
+                    name   = this.name,
+                    url    = videoUrl,
+                    type   = INFER_TYPE
+                ) {
+                    this.referer  = url
+                    this.quality  = getQualityFromName(quality)
+                    this.headers  = userAgent
+                }
             )
         }
     }
