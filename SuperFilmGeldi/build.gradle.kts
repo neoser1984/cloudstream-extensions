@@ -1,0 +1,18 @@
+version = 1
+
+cloudstream {
+    authors     = listOf("keyiflerolsun", "NeO (port)")
+    language    = "tr"
+    description = "Hd film izliyerek arkadaşlarınızla ve sevdiklerinizle iyi bir vakit geçirmek istiyorsanız açın bir film eğlenmeye bakın. Bilim kurgu filmleri, aşk drama vahşet aşk romantik sıradışı korku filmlerini izle."
+
+    /**
+     * Status int as the following:
+     * 0: Down
+     * 1: Ok
+     * 2: Slow
+     * 3: Beta only
+    **/
+    status  = 1
+    tvTypes = listOf("Movie")
+    iconUrl = "https://www.google.com/s2/favicons?domain=www.superfilmgeldi.biz&sz=%size%"
+}
