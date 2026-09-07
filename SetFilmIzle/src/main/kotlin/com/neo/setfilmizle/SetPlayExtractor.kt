@@ -103,34 +103,12 @@ open class SetPlay : ExtractorApi() {
             "Sec-Fetch-Site"  to "same-origin"
         )
 
-        // ! TANI (debug) modu: "ERROR_CODE_PARSING_MANIFEST_MALFORMED" hatasının asıl sebebini
-        // ! görebilmek için manifesti burada bir kere de biz çekip, gövdesi gerçekten m3u8'e
-        // ! benziyor mu diye kontrol ediyoruz — benzemiyorsa sonucu, kaynak listesinde görünen
-        // ! sahte bir "TANI" satırı olarak bildiriyoruz. Sorun çözülünce kaldırılacak.
-        try {
-            val manifestCheck = app.get(url = m3uLink, headers = manifestHeaders)
-            val body = manifestCheck.text
-            if (!body.trimStart().startsWith("#EXTM3U")) {
-                callback.invoke(
-                    newExtractorLink(
-                        source = "STF-TANI",
-                        name   = "TANI» manifest kod=${manifestCheck.code} gövde=${body.take(150).replace("\n", " ")}",
-                        url    = "$mainUrl/#tani",
-                        type   = ExtractorLinkType.M3U8
-                    ) { quality = Qualities.Unknown.value }
-                )
-            }
-        } catch (e: Throwable) {
-            callback.invoke(
-                newExtractorLink(
-                    source = "STF-TANI",
-                    name   = "TANI» manifest hata » ${e::class.simpleName}: ${e.message}",
-                    url    = "$mainUrl/#tani",
-                    type   = ExtractorLinkType.M3U8
-                ) { quality = Qualities.Unknown.value }
-            )
-        }
-
+        // ! NOT: Daha önce burada, manifestin geçerli olup olmadığını görmek için ayrı bir
+        // ! "tanı" isteği (app.get) atılıyordu. ERROR_CODE_IO_BAD_HTTP_STATUS hatasının bu
+        // ! ekstra isteğin linki (muhtemelen tek kullanımlık bir token ile) "tüketmesinden"
+        // ! kaynaklanabileceği görüldü — ExoPlayer aynı linki ikinci kez çekmeye çalışınca
+        // ! sunucu reddediyor olabilir. Bu yüzden manifest artık yalnızca ExoPlayer tarafından,
+        // ! tek seferde çekiliyor; ekstra tanı isteği kaldırıldı.
         callback.invoke(
             newExtractorLink(
                 source  = this.name,
