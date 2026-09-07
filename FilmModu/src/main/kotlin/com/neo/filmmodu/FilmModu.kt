@@ -6,6 +6,7 @@ import android.util.Log
 import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 
@@ -81,7 +82,6 @@ class FilmModu : MainAPI() {
         val description = document.selectFirst("p[itemprop='description']")?.text()?.trim()
         val year        = document.selectFirst("span[itemprop='dateCreated']")?.text()?.trim()?.toIntOrNull()
         val tags        = document.select("div.description a[href*='-kategori/']").map { it.text() }
-        val rating      = document.selectFirst("div.description p")?.ownText()?.split(" ")?.last()?.trim()?.toRatingInt()
         val actors      = document.select("div.description a[href*='-oyuncu-']").map { Actor(it.selectFirst("span")!!.text()) }
         val trailer     = document.selectFirst("div.container iframe")?.attr("src")
 
@@ -90,7 +90,6 @@ class FilmModu : MainAPI() {
             this.plot      = description
             this.year      = year
             this.tags      = tags
-            this.rating    = rating
             addActors(actors)
             addTrailer(trailer)
         }
