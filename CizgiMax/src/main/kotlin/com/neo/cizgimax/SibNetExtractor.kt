@@ -5,6 +5,7 @@ package com.neo.cizgimax
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.newExtractorLink
 
 open class SibNet : ExtractorApi() {
     override val name            = "SibNet"
