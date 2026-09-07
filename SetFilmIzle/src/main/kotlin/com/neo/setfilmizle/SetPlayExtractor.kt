@@ -31,42 +31,36 @@ open class SetPlay : ExtractorApi() {
         val iSource = response.text
         val cookies = response.headers.values("Set-Cookie").joinToString("; ") { it.substringBefore(";") }
 
-        // ! TANI (debug) modu: "Player konfigurasyonu bulunamadı" hatasının asıl sebebini görmek için,
-        // ! regex eşleşmediğinde direkt hata fırlatmak yerine köprü sayfasının HTTP kodunu ve
-        // ! gövdesinin başını kaynak listesinde sahte bir "TANI" satırı olarak bildiriyoruz.
-        // ! Sorun çözülünce kaldırılacak.
-        val jsonString = Regex("""FirePlayer\([^,]+,\s*(\{.*?\})\s*,\s*(?:true|false)\)""", setOf(RegexOption.DOT_MATCHES_ALL))
-            .find(iSource)?.groupValues?.get(1)
-
-        if (jsonString == null) {
-            // ! Tek satır yetmedi: sayfanın anti-bot betiğini tam görebilmek için gövdeyi
-            // ! parça parça, numaralı ayrı "TANI" kaynakları olarak listeye ekliyoruz.
-            val flatBody  = iSource.replace("\n", " ").replace("\r", " ")
+        // ! TANI (debug) modu: v15'te tanı metinlerini sahte ExtractorLink olarak "Kaynaklar"
+        // ! listesine ekliyorduk, ama bu CloudStream'in kaynak/dublaj seçim mantığını bozup
+        // ! gerçek SetPlay linkini gizleyebiliyor (ekranda sadece "STF-TANI - Dublaj" görünüp
+        // ! gerçek kaynağın hiç denenmemesine yol açabiliyor). Bu yüzden v16'da tanı metinlerini
+        // ! video kaynağıyla YARIŞMAYAN ayrı bir kanala, "Altyazılar" listesine taşıyoruz.
+        // ! Gerçek video linki HER ZAMAN tek başına callback'e gönderiliyor.
+        fun emitTani(prefix: String, text: String) {
+            val flatBody  = text.replace("\n", " ").replace("\r", " ")
             val chunkSize = 350
-            val maxChunks = 12
-            val totalChunks = minOf(maxChunks, (flatBody.length + chunkSize - 1) / chunkSize)
-
-            callback.invoke(
-                newExtractorLink(
-                    source = "STF-TANI",
-                    name   = "TANI» köprü kod=${response.code} uzunluk=${iSource.length}",
-                    url    = "$mainUrl/#tani",
-                    type   = ExtractorLinkType.M3U8
-                ) { quality = Qualities.Unknown.value }
-            )
+            val maxChunks = 10
+            val totalChunks = minOf(maxChunks, maxOf(1, (flatBody.length + chunkSize - 1) / chunkSize))
 
             for (i in 0 until totalChunks) {
                 val start = i * chunkSize
                 val end   = minOf(start + chunkSize, flatBody.length)
-                callback.invoke(
-                    newExtractorLink(
-                        source = "STF-TANI",
-                        name   = "TANI ${i + 1}/${totalChunks}» ${flatBody.substring(start, end)}",
-                        url    = "$mainUrl/#tani",
-                        type   = ExtractorLinkType.M3U8
-                    ) { quality = Qualities.Unknown.value }
+                val chunk = if (flatBody.isEmpty()) "" else flatBody.substring(start, end)
+                subtitleCallback.invoke(
+                    SubtitleFile(
+                        lang = "${prefix} ${i + 1}/${totalChunks}» $chunk",
+                        url  = "$mainUrl/#tani"
+                    )
                 )
             }
+        }
+
+        val jsonString = Regex("""FirePlayer\([^,]+,\s*(\{.*?\})\s*,\s*(?:true|false)\)""", setOf(RegexOption.DOT_MATCHES_ALL))
+            .find(iSource)?.groupValues?.get(1)
+
+        if (jsonString == null) {
+            emitTani("TANI-B» köprü kod=${response.code} uzunluk=${iSource.length} »", iSource)
             return
         }
 
@@ -77,7 +71,7 @@ open class SetPlay : ExtractorApi() {
 
         val uri = Uri.parse(url)
         val partKey = uri.getQueryParameter("partKey") ?: ""
-        
+
         val suffix = when {
             partKey.contains("turkcedublaj", ignoreCase = true) -> "Dublaj"
             partKey.contains("turkcealtyazi", ignoreCase = true) -> "Altyazı"
@@ -103,50 +97,16 @@ open class SetPlay : ExtractorApi() {
             "Sec-Fetch-Site"  to "same-origin"
         )
 
-        // ! "Tek kullanımlık link tüketme" ve "referer alanı eksik" teorileri denendi, ikisi de
-        // ! ERROR_CODE_IO_BAD_HTTP_STATUS'ü çözmedi — yani sorun muhtemelen sunucu tarafında
-        // ! (örn. aralıklı bot/rate-limit koruması). Şimdi bu isteği BİZ de ayrıca yapıp gerçek
-        // ! HTTP kodunu ve gövdeyi (parça parça) kaynak listesine "TANI" olarak yazıyoruz —
-        // ! ExoPlayer'ı engellemez, sadece bilgi toplar.
+        // ! Gerçek HTTP kodunu/gövdeyi görmek için manifesti biz de ayrıca çekiyoruz, ama
+        // ! sonucu artık "Altyazılar" listesine yazıyoruz (video kaynak seçimini etkilemez).
         try {
             val manifestCheck = app.get(url = m3uLink, headers = manifestHeaders, referer = url)
             val body = manifestCheck.text
             if (!body.trimStart().startsWith("#EXTM3U")) {
-                val flatBody  = body.replace("\n", " ").replace("\r", " ")
-                val chunkSize = 350
-                val maxChunks = 8
-                val totalChunks = minOf(maxChunks, (flatBody.length + chunkSize - 1) / chunkSize)
-
-                callback.invoke(
-                    newExtractorLink(
-                        source = "STF-TANI",
-                        name   = "TANI» manifest kod=${manifestCheck.code} uzunluk=${body.length}",
-                        url    = "$mainUrl/#tani",
-                        type   = ExtractorLinkType.M3U8
-                    ) { quality = Qualities.Unknown.value }
-                )
-                for (i in 0 until totalChunks) {
-                    val start = i * chunkSize
-                    val end   = minOf(start + chunkSize, flatBody.length)
-                    callback.invoke(
-                        newExtractorLink(
-                            source = "STF-TANI",
-                            name   = "TANI-M ${i + 1}/${totalChunks}» ${flatBody.substring(start, end)}",
-                            url    = "$mainUrl/#tani",
-                            type   = ExtractorLinkType.M3U8
-                        ) { quality = Qualities.Unknown.value }
-                    )
-                }
+                emitTani("TANI-M» manifest kod=${manifestCheck.code} uzunluk=${body.length} »", body)
             }
         } catch (e: Throwable) {
-            callback.invoke(
-                newExtractorLink(
-                    source = "STF-TANI",
-                    name   = "TANI» manifest hata » ${e::class.simpleName}: ${e.message}",
-                    url    = "$mainUrl/#tani",
-                    type   = ExtractorLinkType.M3U8
-                ) { quality = Qualities.Unknown.value }
-            )
+            emitTani("TANI-M» manifest hata »", "${e::class.simpleName}: ${e.message}")
         }
 
         callback.invoke(
