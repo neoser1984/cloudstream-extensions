@@ -109,6 +109,11 @@ open class SetPlay : ExtractorApi() {
         // ! kaynaklanabileceği görüldü — ExoPlayer aynı linki ikinci kez çekmeye çalışınca
         // ! sunucu reddediyor olabilir. Bu yüzden manifest artık yalnızca ExoPlayer tarafından,
         // ! tek seferde çekiliyor; ekstra tanı isteği kaldırıldı.
+        // ! ÖNEMLİ DÜZELTME: headers map'i içindeki "Referer" girdisi CloudStream'in oynatıcısı
+        // ! tarafından kullanılmıyor olabilir — repodaki diğer tüm çalışan extractor'lar ayrıca
+        // ! ayrı bir `this.referer` alanı da ayarlıyor (bkz. FilmMakinesi, DiziPal, SelcukFlix vb.).
+        // ! Bu alan hiç ayarlanmadığı için ExoPlayer muhtemelen Referer'sız istek atıyor ve sunucu
+        // ! bunu reddediyordu (ERROR_CODE_IO_BAD_HTTP_STATUS). Şimdi ikisini de ayarlıyoruz.
         callback.invoke(
             newExtractorLink(
                 source  = this.name,
@@ -118,6 +123,7 @@ open class SetPlay : ExtractorApi() {
             ) {
                 quality = Qualities.Unknown.value
                 headers = manifestHeaders
+                this.referer = url
             }
         )
     }
