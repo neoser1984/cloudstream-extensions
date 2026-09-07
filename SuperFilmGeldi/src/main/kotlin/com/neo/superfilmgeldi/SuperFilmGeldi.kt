@@ -6,6 +6,7 @@ import android.util.Log
 import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 
@@ -91,7 +92,6 @@ class SuperFilmGeldi : MainAPI() {
         val year            = document.selectFirst("div.release a")?.text()?.toIntOrNull()
         val description     = document.selectFirst("div.excerpt p")?.text()?.trim()
         val tags            = document.select("div.categories a").map { it.text() }
-        val rating          = document.selectFirst("span.imdb-rating")?.text()?.trim()?.split(" ")?.first()?.toRatingInt()
         val recommendations = document.select("div.film-content div.existing_item").mapNotNull { it.toSearchResult() }
         val actors          = document.select("div.actor a").map {
             Actor(it.text())
@@ -102,7 +102,6 @@ class SuperFilmGeldi : MainAPI() {
             this.year            = year
             this.plot            = description
             this.tags            = tags
-            this.rating          = rating
             this.recommendations = recommendations
             addActors(actors)
         }
