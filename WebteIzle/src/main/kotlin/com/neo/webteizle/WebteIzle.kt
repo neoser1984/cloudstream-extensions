@@ -231,14 +231,15 @@ class WebteIzle : MainAPI() {
                     }
 
                     callback.invoke(
-                        ExtractorLink(
-                            source  = "$dilAd - ${this.name}",
-                            name    = "$dilAd - ${this.name}",
-                            url     = m3uLink,
-                            referer = "${mainUrl}/",
-                            quality = getQualityFromName("1440p"),
-                            isM3u8  = true
-                        )
+                        newExtractorLink(
+                            source = "$dilAd - ${this.name}",
+                            name   = "$dilAd - ${this.name}",
+                            url    = m3uLink,
+                            type   = ExtractorLinkType.M3U8
+                        ) {
+                            this.referer  = "${mainUrl}/"
+                            this.quality  = getQualityFromName("1440p")
+                        }
                     )
 
                     continue
@@ -251,14 +252,15 @@ class WebteIzle : MainAPI() {
                     }
 
                     callback.invoke(
-                        ExtractorLink(
-                            source  = "$dilAd - ${this.name}",
-                            name    = "$dilAd - ${this.name}",
-                            url     = fixUrl(decoded),
-                            referer = "${mainUrl}/",
-                            quality = Qualities.Unknown.value,
-                            isM3u8  = true
-                        )
+                        newExtractorLink(
+                            source = "$dilAd - ${this.name}",
+                            name   = "$dilAd - ${this.name}",
+                            url    = fixUrl(decoded),
+                            type   = ExtractorLinkType.M3U8
+                        ) {
+                            this.referer  = "${mainUrl}/"
+                            this.quality  = Qualities.Unknown.value
+                        }
                     )
                 }
 
@@ -266,16 +268,16 @@ class WebteIzle : MainAPI() {
                     Log.d("WBTI", "iframe » $iframe")
                     loadExtractor(iframe, "${mainUrl}/", subtitleCallback) { link ->
                         callback.invoke(
-                            ExtractorLink(
-                                source        = "$dilAd - ${link.name}",
-                                name          = "$dilAd - ${link.name}",
-                                url           = link.url,
-                                referer       = link.referer,
-                                quality       = link.quality,
-                                headers       = link.headers,
-                                extractorData = link.extractorData,
-                                type          = link.type
-                            )
+                            newExtractorLink(
+                                source = "$dilAd - ${link.name}",
+                                name   = "$dilAd - ${link.name}",
+                                url    = link.url,
+                                type   = link.type
+                            ) {
+                                this.referer  = link.referer
+                                this.quality  = link.quality
+                                this.headers  = link.headers
+                            }
                         )
                     }
                 }
