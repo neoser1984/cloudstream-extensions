@@ -11,5 +11,6 @@ class SetFilmIzlePlugin: Plugin() {
         registerExtractorAPI(SetPlay())
         registerExtractorAPI(SetPrime())
         registerExtractorAPI(ExPlay())
+        registerExtractorAPI(Fastplay())
     }
 }
