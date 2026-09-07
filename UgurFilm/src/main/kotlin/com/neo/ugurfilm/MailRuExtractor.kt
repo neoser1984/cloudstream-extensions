@@ -28,15 +28,16 @@ open class MailRu : ExtractorApi() {
             val videoUrl = if (video.url.startsWith("//")) "https:${video.url}" else video.url
 
             callback.invoke(
-                ExtractorLink(
-                    source  = this.name,
-                    name    = this.name,
-                    url     = videoUrl,
-                    referer = url,
-                    headers = mapOf("Cookie" to "video_key=${videoKey}"),
-                    quality = getQualityFromName(video.key),
-                    isM3u8  = false
-                )
+                newExtractorLink(
+                    source = this.name,
+                    name   = this.name,
+                    url    = videoUrl,
+                    type   = INFER_TYPE
+                ) {
+                    this.referer  = url
+                    this.quality  = getQualityFromName(video.key)
+                    this.headers  = mapOf("Cookie" to "video_key=${videoKey}")
+                }
             )
         }
     }
