@@ -39,14 +39,34 @@ open class SetPlay : ExtractorApi() {
             .find(iSource)?.groupValues?.get(1)
 
         if (jsonString == null) {
+            // ! Tek satır yetmedi: sayfanın anti-bot betiğini tam görebilmek için gövdeyi
+            // ! parça parça, numaralı ayrı "TANI" kaynakları olarak listeye ekliyoruz.
+            val flatBody  = iSource.replace("\n", " ").replace("\r", " ")
+            val chunkSize = 350
+            val maxChunks = 12
+            val totalChunks = minOf(maxChunks, (flatBody.length + chunkSize - 1) / chunkSize)
+
             callback.invoke(
                 newExtractorLink(
                     source = "STF-TANI",
-                    name   = "TANI» köprü kod=${response.code} uzunluk=${iSource.length} gövde=${iSource.take(200).replace("\n", " ")}",
+                    name   = "TANI» köprü kod=${response.code} uzunluk=${iSource.length}",
                     url    = "$mainUrl/#tani",
                     type   = ExtractorLinkType.M3U8
                 ) { quality = Qualities.Unknown.value }
             )
+
+            for (i in 0 until totalChunks) {
+                val start = i * chunkSize
+                val end   = minOf(start + chunkSize, flatBody.length)
+                callback.invoke(
+                    newExtractorLink(
+                        source = "STF-TANI",
+                        name   = "TANI ${i + 1}/${totalChunks}» ${flatBody.substring(start, end)}",
+                        url    = "$mainUrl/#tani",
+                        type   = ExtractorLinkType.M3U8
+                    ) { quality = Qualities.Unknown.value }
+                )
+            }
             return
         }
 
