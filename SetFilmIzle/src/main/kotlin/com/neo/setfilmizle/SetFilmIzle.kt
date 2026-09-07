@@ -213,6 +213,8 @@ class SetFilmIzle : MainAPI() {
 
             if (sourceIframe.contains("explay.store") || sourceIframe.contains("setplay.site")) {
                 loadExtractor("${sourceIframe}?partKey=${partKey}", "${mainUrl}/", subtitleCallback, callback)
+            } else if (sourceIframe.contains("fastplay.mom")) {
+                loadExtractor(sourceIframe, sourceIframe, subtitleCallback, callback)
             } else {
                 loadExtractor(sourceIframe, "${mainUrl}/", subtitleCallback, callback)
             }
