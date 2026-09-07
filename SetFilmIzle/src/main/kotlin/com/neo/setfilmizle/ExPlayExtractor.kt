@@ -19,10 +19,13 @@ open class ExPlay : ExtractorApi() {
         @Suppress("NAME_SHADOWING") val url      = url.substringBefore("?partKey=")
         val iSource  = app.get(url, referer=extRef).text
 
-        val videoUrl    = Regex("""videoUrl":"([^",]+)""").find(iSource)?.groupValues?.get(1) ?: throw ErrorLoadingException("videoUrl not found")
-        val videoServer = Regex("""videoServer":"([^",]+)""").find(iSource)?.groupValues?.get(1) ?: throw ErrorLoadingException("videoServer not found")
-        val title       = if (partKey != "") partKey else Regex("""title":"([^",]+)""").find(iSource)?.groupValues?.get(1)?.split(".")?.last() ?: "Unknown"
-        val m3uLink     = "${mainUrl}${videoUrl.replace("\\", "")}?s=${videoServer}"
+        val videoUrlRaw = Regex(""""videoUrl":"([^",]+)""").find(iSource)?.groupValues?.get(1) ?: throw ErrorLoadingException("videoUrl not found")
+        val videoServer = Regex(""""videoServer":"([^",]+)""").find(iSource)?.groupValues?.get(1) ?: throw ErrorLoadingException("videoServer not found")
+        val title       = if (partKey != "") partKey else Regex(""""title":"([^",]+)""").find(iSource)?.groupValues?.get(1)?.split(".")?.last() ?: "Unknown"
+
+        val cleanVideoUrl = videoUrlRaw.replace("\\", "")
+        val baseVideoUrl  = if (cleanVideoUrl.startsWith("http")) cleanVideoUrl else "${mainUrl}${cleanVideoUrl}"
+        val m3uLink       = if (baseVideoUrl.contains("?")) "${baseVideoUrl}&s=${videoServer}" else "${baseVideoUrl}?s=${videoServer}"
         Log.d("Kekik_${this.name}", "m3uLink » $m3uLink")
 
         callback.invoke(
