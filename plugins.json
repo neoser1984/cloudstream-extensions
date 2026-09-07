@@ -481,28 +481,6 @@
         "name": "SelcukFlix"
     },
     {
-        "iconUrl": "https://www.google.com/s2/favicons?domain=www.setfilmizle.ltd&sz=%size%",
-        "fileHash": "sha256-a1c5a3a60f91ed5ec464eca2dee6b1f08a67eb12ec7a948fda8dcd7407f18d3d",
-        "apiVersion": 1,
-        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 34051,
-        "status": 1,
-        "language": "tr",
-        "authors": [
-            "murattunc05 (kaynak kod)",
-            "NeO"
-        ],
-        "tvTypes": [
-            "Movie",
-            "TvSeries"
-        ],
-        "version": 17,
-        "internalName": "SetFilmIzle",
-        "description": "Setfilmizle sitesinde, donma ya\u015famadan T\u00fcrk\u00e7e dublaj ve altyaz\u0131l\u0131 filmleri ile dizileri 1080p full HD kalitesinde izleyebilirsiniz.",
-        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/SetFilmIzle.cs3",
-        "name": "SetFilmIzle"
-    },
-    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=sezonlukdizi6.com&sz=%size%",
         "fileHash": "sha256-70b9f666bf4ff991dcbb472458586693450e559957a236df51df7c5920bb83dc",
         "apiVersion": 1,
