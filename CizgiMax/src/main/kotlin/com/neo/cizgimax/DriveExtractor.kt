@@ -29,14 +29,15 @@ open class Drive : ExtractorApi() {
         Log.d("Kekik_${this.name}", "m3uLink » $m3uLink")
 
         callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = m3uLink,
-                referer = url,
-                quality = Qualities.Unknown.value,
-                type    = INFER_TYPE
-            )
+            newExtractorLink(
+                source = this.name,
+                name   = this.name,
+                url    = m3uLink,
+                type   = INFER_TYPE
+            ) {
+                this.referer  = url
+                this.quality  = Qualities.Unknown.value
+            }
         )
     }
 }
