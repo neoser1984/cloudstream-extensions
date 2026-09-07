@@ -12,6 +12,7 @@ import android.webkit.WebViewClient
 import com.lagradost.api.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
@@ -60,15 +61,16 @@ window.chrome = { runtime: {} };
                         Thread {
                             fetchAndCheckResponse(url, headers) { sourceUrl, headers ->
                                 callback.invoke(
-                                    ExtractorLink(
-                                        source  = this@W2MExtractor.name,
-                                        name    = this@W2MExtractor.name,
-                                        url     = sourceUrl,
-                                        referer = headers["Referer"] ?: headers["referer"] ?: mainUrl,
-                                        quality = Qualities.Unknown.value,
-                                        type    = ExtractorLinkType.M3U8,
-                                        headers = headers
-                                    )
+                                    newExtractorLink(
+                                        source = this@W2MExtractor.name,
+                                        name   = this@W2MExtractor.name,
+                                        url    = sourceUrl,
+                                        type   = ExtractorLinkType.M3U8
+                                    ) {
+                                        this.referer  = headers["Referer"] ?: headers["referer"] ?: mainUrl
+                                        this.quality  = Qualities.Unknown.value
+                                        this.headers  = headers
+                                    }
                                 )
                             }
                         }.start()
