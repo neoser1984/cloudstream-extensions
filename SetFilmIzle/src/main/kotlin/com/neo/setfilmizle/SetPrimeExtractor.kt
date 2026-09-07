@@ -18,12 +18,9 @@ open class SetPrime : ExtractorApi() {
         @Suppress("NAME_SHADOWING") val url      = url.substringBefore("?partKey=")
         val iSource  = app.post(url.replace("embed?i=", "embed/get?i="), referer=url).text
 
-        val links = Regex("""Links":\["([^"\]]+)""").find(iSource)?.groupValues?.get(1) ?: throw ErrorLoadingException("Links not found")
-        if (!links.startsWith("/")) {
-            throw ErrorLoadingException("Links not valid")
-        }
+        val linksRaw = Regex(""""Links":\["([^"\]]+)""").find(iSource)?.groupValues?.get(1) ?: throw ErrorLoadingException("Links not found")
 
-        val m3uLink = "${mainUrl}${links}"
+        val m3uLink = if (linksRaw.startsWith("http")) linksRaw else "${mainUrl}${linksRaw}"
         Log.d("Kekik_${this.name}", "m3uLink » $m3uLink")
 
         callback.invoke(
