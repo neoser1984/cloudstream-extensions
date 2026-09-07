@@ -5,6 +5,7 @@ package com.neo.sinewix
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 
 class SineWix : MainAPI() {
@@ -98,7 +99,6 @@ class SineWix : MainAPI() {
             val description     = media.overview
             val year            = media.releaseDate.split("-").first().toIntOrNull()
             val tags            = media.genres?.map { it.name }
-            val rating          = "${media.voteAverage}".toRatingInt()
             val recommendations = media.relateds?.map { newMovieSearchResponse(it.title, "?type=${it.type}&id=${it.id}", TvType.Movie) { this.posterUrl = it.posterPath } }
             val actors          = media.casterslist?.map { Actor(it.name, it.profilePath) }
 
@@ -107,7 +107,6 @@ class SineWix : MainAPI() {
                 this.plot            = description
                 this.year            = year
                 this.tags            = tags
-                this.rating          = rating
                 this.recommendations = recommendations
                 addActors(actors)
             }
@@ -123,7 +122,6 @@ class SineWix : MainAPI() {
             val description     = media.overview
             val year            = media.firstAirDate.split("-").first().toIntOrNull()
             val tags            = media.genres?.map { it.name }
-            val rating          = "${media.voteAverage}".toRatingInt()
             val recommendations = media.relateds?.map { newMovieSearchResponse(it.name, "?type=${it.type}&id=${it.id}", TvType.Movie) { this.posterUrl = it.posterPath } }
             val actors          = media.casterslist?.map { Actor(it.name, it.profilePath) }
 
@@ -146,7 +144,6 @@ class SineWix : MainAPI() {
                 this.plot            = description
                 this.year            = year
                 this.tags            = tags
-                this.rating          = rating
                 this.recommendations = recommendations
                 addActors(actors)
             }
