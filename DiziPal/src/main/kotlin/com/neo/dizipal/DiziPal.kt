@@ -6,6 +6,7 @@ import android.util.Log
 import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 
@@ -225,14 +226,15 @@ class DiziPal : MainAPI() {
         }
 
         callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = m3uLink,
-                referer = "${mainUrl}/",
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
-            )
+            newExtractorLink(
+                source = this.name,
+                name   = this.name,
+                url    = m3uLink,
+                type   = ExtractorLinkType.M3U8
+            ) {
+                this.referer  = "${mainUrl}/"
+                this.quality  = Qualities.Unknown.value
+            }
         )
 
         // M3u8Helper.generateM3u8(
