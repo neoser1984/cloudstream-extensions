@@ -5,6 +5,7 @@ package com.neo.setfilmizle
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 
 open class SetPlay : ExtractorApi() {
     override val name            = "SetPlay"
@@ -22,14 +23,15 @@ open class SetPlay : ExtractorApi() {
         Log.d("Kekik_${this.name}", "m3uLink » $m3uLink")
 
         callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = "${this.name} - $title",
-                url     = m3uLink,
-                referer = url,
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
-            )
+            newExtractorLink(
+                source = this.name,
+                name   = "${this.name} - $title",
+                url    = m3uLink,
+                type   = ExtractorLinkType.M3U8
+            ) {
+                this.referer  = url
+                this.quality  = Qualities.Unknown.value
+            }
         )
     }
 }
