@@ -150,13 +150,14 @@ class BelgeselX : MainAPI() {
 
                     callback.invoke(
                         newExtractorLink(
-                            source  = thisName,
-                            name    = thisName,
-                            url     = videoUrl,
-                            referer = data,
-                            quality = getQualityFromName(quality),
-                            type    = INFER_TYPE
-                        )
+                            source = thisName,
+                            name   = thisName,
+                            url    = videoUrl,
+                            type   = INFER_TYPE
+                        ) {
+                            this.referer  = data
+                            this.quality  = getQualityFromName(quality)
+                        }
                     )
                 }
             } else {
