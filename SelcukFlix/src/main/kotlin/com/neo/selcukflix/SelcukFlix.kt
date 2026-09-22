@@ -154,7 +154,7 @@ class SelcukFlix : MainAPI() {
             // ! doğrudan gövdeyi çözmeye çalışmak (eski davranış) her zaman başarısız oluyordu.
             val rawBody = app.post(
                 "${mainUrl}/api/bg/searchContent",
-                params  = mapOf("searchterm" to query),
+                data    = mapOf("searchterm" to query),
                 referer = "${mainUrl}/"
             ).text
 
