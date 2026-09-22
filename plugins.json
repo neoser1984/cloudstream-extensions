@@ -1,10 +1,10 @@
 [
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=asyawatch.com&sz=%size%",
-        "fileHash": "sha256-6c442852292abbc1503fd988ad9b266ad9bd9b49876bb0a96a496b41a4bc4dd5",
+        "fileHash": "sha256-6bbbfb9acbfcdde6054563df6fadef9444ff833899c6a1796a7561db9ec3e045",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 18513,
+        "fileSize": 18437,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -22,10 +22,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=github.com&sz=%size%",
-        "fileHash": "sha256-dff3df54e05aa7283916bf102009a7c58e471248c72283f6620f07af31014162",
+        "fileHash": "sha256-05bda5935c1764c49a24353d0e72e3b3c7d5930855a86a41dd0beeffb26747a0",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 13653,
+        "fileSize": 13640,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -42,10 +42,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=ddizi.im&sz=%size%",
-        "fileHash": "sha256-1fb76eb3280ae9ca9ecbc794046a7b4ecfe6c075532f6f290a8ff67aae531927",
+        "fileHash": "sha256-63f0cee05975ad7d2ad38b49235e23104fcc1d581313aa37e50497a4f02df147",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 15330,
+        "fileSize": 15320,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -62,10 +62,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=diziasya.com&sz=%size%",
-        "fileHash": "sha256-99cae84b80a5fc73370b1cb11a83c9dc4de9b6dba4192a199f7092384d9415f1",
+        "fileHash": "sha256-7fe8cb1b645a4ef8dd6893c989a815c9a07632a0b49e0e0dc45e383756b93fdc",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 19144,
+        "fileSize": 19128,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -84,10 +84,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=www.dizibox.live&sz=%size%",
-        "fileHash": "sha256-ec38b834859cf1eb87fa02177ce89257ed3bb982f4c36b6a4bef5a0cfdcea34e",
+        "fileHash": "sha256-bf942e37f957e67db8f824188849cee11aecf0c2631c516db1c311a9b5d96279",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 22662,
+        "fileSize": 22917,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -105,10 +105,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizigom.biz&sz=%size%",
-        "fileHash": "sha256-6bd9b38bace985e61cffae5f41dcaae00de75c3ecf42f0cd7c11ee8e9503e998",
+        "fileHash": "sha256-c10c9c6ce78d5f687676d87d0f91f5c329ae2e64705552beb09ba47f6995a468",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 15238,
+        "fileSize": 15230,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -125,10 +125,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizikorea3.com&sz=%size%",
-        "fileHash": "sha256-b7fea9469e1006ed9edb85c76bb84f077f2cbec0f81d2405b6c2fc78baf79f60",
+        "fileHash": "sha256-6372b06668a01fa3986d5511d1a5a49c79c9df5b0b4f30f25d1b50026a9ec0d5",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 20126,
+        "fileSize": 20170,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -146,10 +146,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizilla.club&sz=%size%",
-        "fileHash": "sha256-b57e09f795df1173bcacaf7230d8a57e98b2163036530003ee214f6eba0124e4",
+        "fileHash": "sha256-35ccfc350f9e456b9d4ed5422bb763c5eb057c57fcc1ee7d15d49707997d7e83",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 36147,
+        "fileSize": 36171,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -167,10 +167,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizimom.food&sz=%size%",
-        "fileHash": "sha256-5d494a40ce2b6bfc893833c5b738e7b551fe3dc84a43c37a86eb9e9c68ccb639",
+        "fileHash": "sha256-8ef3294ef1cd866f92b7c7f04854f0adff56db99c4570c1fb23c865e5cae8b28",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 21714,
+        "fileSize": 21838,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -187,10 +187,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizipal1578.com&sz=%size%",
-        "fileHash": "sha256-0d9923c979a2cb9b36ff2535af60bd2a887730e9803a6f20694ca34b2594cfe2",
+        "fileHash": "sha256-e31c8c708fb91c02b2a95816f8db9b16a300e5d886fd1022100e969fbb9c9a7d",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 24838,
+        "fileSize": 24877,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -208,10 +208,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizipal2121.com&sz=%size%",
-        "fileHash": "sha256-2ea48d716382b684dffd82881542f4f693881f0f350a909f4a77a44e286d0091",
+        "fileHash": "sha256-05d4e64234a3a8b3338d3ce240466437b861359e8139c5f302fcde8e9552dcfb",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 24578,
+        "fileSize": 24649,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -229,10 +229,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=diziyo.so&sz=%size%",
-        "fileHash": "sha256-edb660b03fd38dfe9f7e45054ba93721ff114deee9694d38ffc4035f9844014b",
+        "fileHash": "sha256-328a4cd2428dee121cffa664d622a7a0d675dbf71831894c16a014678f616b66",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 15583,
+        "fileSize": 15584,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -250,10 +250,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=diziyou.one&sz=%size%",
-        "fileHash": "sha256-660850f0db766619090c6b9cc57bd2358173308caf1ff145fe3ef430c9cd11c7",
+        "fileHash": "sha256-1f271ff68ce884f3fd3e71f2c77ae6d3480d20e79a612b3dc345898a8a22eaf0",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 17065,
+        "fileSize": 17214,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -270,10 +270,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=filmmakinesi.to&sz=%size%",
-        "fileHash": "sha256-0cc581fb96d6c6f40299fdd80d6bb4bf8d00a5f29862c09dd2017164d7b3e333",
+        "fileHash": "sha256-e0a71c49cdb68b3e575d1ef500f8625248f355b21ebf2b575a3d9172996a5f58",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 16698,
+        "fileSize": 16678,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -290,10 +290,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=filmzal.me&sz=%size%",
-        "fileHash": "sha256-a9948d995fadc22ca01f6df63d2b5e7801c4a2b7ec5f6a4ac112d0501af926f4",
+        "fileHash": "sha256-2d592d5090c6ee48421a06063c6075e618ea5f291e29a9f83c8e4b1ad57eb167",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 22102,
+        "fileSize": 22114,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -311,10 +311,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=fullhdfilmizlesene.now&sz=%size%",
-        "fileHash": "sha256-a23e5eaea96a5fc542a64da4a35505fcfa642730fc581203f74c0a8912f5b82a",
+        "fileHash": "sha256-5d55aec5d28ac5a1142887c2105da064d282aa84ef029f444174aa4b552f5356",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 23518,
+        "fileSize": 23569,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -331,10 +331,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=%size%",
-        "fileHash": "sha256-56530c5ced830b7c85c43fee94822e358c93d8f827cee4136ed857e875bbc8ff",
+        "fileHash": "sha256-5b618edf4110075efa5bf4519c4233b8667d891bdbce3bf298f956dfbfaabcd7",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 27751,
+        "fileSize": 27761,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -352,10 +352,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmdiziizle.com&sz=%size%",
-        "fileHash": "sha256-0ed99f254ac49dd5fe8da2c1a986dc6b621dd268dc1b486f774a26307c641b87",
+        "fileHash": "sha256-800f26adb1c6c31f303a4f35e35e0f45eb1d00bc3565d2448fa575d0847bd91c",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 19097,
+        "fileSize": 19102,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -373,10 +373,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmizle.vip&sz=%size%",
-        "fileHash": "sha256-058109b5984882aee8b490299e742346721d0415b60a749d70f737e08872e243",
+        "fileHash": "sha256-69a49c382f0ea573949631e2e5bb15e072260cd861bf0ea28ac5aed6fe3528e6",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 20800,
+        "fileSize": 20805,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -394,10 +394,10 @@
     },
     {
         "iconUrl": "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEh3vCp6N1K4bECoYRQD-cisJF2_6V_Hk01ZhDmoPR2JuM8O5qr4MqrPO1munM9cRlleBBSK6odYhLtDBWv4E3vhPhynlmS5hVVtJZShHoGA5REQ8_3v8SIlccTEqzVQu2UJyNYQdJNrKIfWy66RQeT0D-CcmFCbHPz5023H6p2v5fv4NVloZ5Rqo_yGrIY/s320/iNat-Box-App.png",
-        "fileHash": "sha256-a5179319edad753acfe168678b07699e71dca7e5dff86cc468db6c6d409364db",
+        "fileHash": "sha256-5dfbc431c9ee6bfe3065eea7225e9aa834fc228998ed315832ccae495a85f83b",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 36584,
+        "fileSize": 36636,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -417,10 +417,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=korefilmizle.com&sz=%size%",
-        "fileHash": "sha256-969fcce71731ec29659482ce69200ef0b2d5f39f98b4fd6aba9ce7df3cc3cd7b",
+        "fileHash": "sha256-64aa28952b4480271a759a7ddf151bb1757a8c7e4b805acbdd393162a0262b5c",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 16916,
+        "fileSize": 16889,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -438,10 +438,10 @@
     },
     {
         "iconUrl": "https://rectv.org.tr/wp-content/uploads/2024/11/rectv-modified.webp",
-        "fileHash": "sha256-01e1a9c043e53e73733d79815aff604b32605dc576ebbb099ac933005097da76",
+        "fileHash": "sha256-04142d545f51bb7056c637da66c606b3642b906909f96762fd80b37f1d122fee",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 28920,
+        "fileSize": 29010,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -461,10 +461,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=selcukflix.co&sz=%size%",
-        "fileHash": "sha256-d51730122b9c85b11f57fd71712bc783b26eb6b1516041afd115c21ab0959dd3",
+        "fileHash": "sha256-d90e38eee4d423598c3e5996245f98b355ba62aa52bfae5b316ccbe357688462",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 22648,
+        "fileSize": 22615,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -474,7 +474,7 @@
             "TvSeries",
             "Movie"
         ],
-        "version": 1,
+        "version": 2,
         "internalName": "SelcukFlix",
         "description": "SelcukFlix - reklams\u0131z, h\u0131zl\u0131 yabanc\u0131 dizi ve film izleme.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/SelcukFlix.cs3",
@@ -482,10 +482,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=www.setfilmizle.ltd&sz=%size%",
-        "fileHash": "sha256-a39b78baa6c379cf0ad8c1ea7180101814d82071dd7ed8e2cf42c9af1eebdc47",
+        "fileHash": "sha256-f1d478c8f34cf66bb6071ab47fb0bbfa5435435964dede3459340141b63c9382",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 26753,
+        "fileSize": 26769,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -504,10 +504,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=sezonlukdizi6.com&sz=%size%",
-        "fileHash": "sha256-70b9f666bf4ff991dcbb472458586693450e559957a236df51df7c5920bb83dc",
+        "fileHash": "sha256-7072463bde001d512fab34841d2584d9da8ce6a4eecaeec6284b9492613b6739",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 21178,
+        "fileSize": 21258,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -525,10 +525,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=trdiziizle.tv&sz=%size%",
-        "fileHash": "sha256-091849b41ea586bd1c50b3a741206f5fd8922b48f6af2922c12d0dbda5badeb8",
+        "fileHash": "sha256-eea0cad3912e02128d2818fb6cf1e9b1b4e97ac2cfeed8e7579583788ca367f5",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 17177,
+        "fileSize": 17146,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -545,10 +545,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=tvdiziler.tv&sz=%size%",
-        "fileHash": "sha256-b1baefba993b446e24e8c265a53935aaba7a9ee858c0f38080229dcf506bf611",
+        "fileHash": "sha256-9261d53f74540a4b6290ea29f95db1fb1c3f18935cddd5f0bb1681a935f768b7",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 20114,
+        "fileSize": 20108,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -565,10 +565,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=webdramaturkey2.com&sz=%size%",
-        "fileHash": "sha256-299f74bbbb452b5e6a3e76f18b781d2d286e85d26858a730a1a4668549952768",
+        "fileHash": "sha256-f0e7c26e768c3a60e7c33a6fb7b12361aeaf570864094ec6611f81a5b6ac9d8d",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 17646,
+        "fileSize": 17648,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -586,10 +586,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=yabancidizi.news&sz=%size%",
-        "fileHash": "sha256-bf59cf740a18e17933a2833524c80d90a0b494ee1ebd504131e44adbf2382f94",
+        "fileHash": "sha256-e5161acfa6f49b66d834490a7fdf61d2ee6378c42a35f92f4a419b908c92f96d",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 22045,
+        "fileSize": 22078,
         "status": 1,
         "language": "tr",
         "authors": [
