@@ -39,7 +39,7 @@ jobs:
           java-version: 17
 
       - name: Android SDK Ayarla
-        uses: android-actions/setup-android@v3.2.2
+        uses: android-actions/setup-android@v4.0.3
 
       # ! JitPack'in "com.github.recloudstream.gradle:gradle:master-SNAPSHOT" adresi
       # ! şu an bozuk metadata üretiyor (bkz: inconsistent module metadata /
