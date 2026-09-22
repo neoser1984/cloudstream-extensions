@@ -125,7 +125,7 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizikorea3.com&sz=%size%",
-        "fileHash": "sha256-6372b06668a01fa3986d5511d1a5a49c79c9df5b0b4f30f25d1b50026a9ec0d5",
+        "fileHash": "sha256-0eae5431103b269fbe064e8c8d09b3cac69d70504e0c14f55d8696f90fd4c970",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
         "fileSize": 20170,
@@ -138,7 +138,7 @@
             "AsianDrama",
             "Movie"
         ],
-        "version": 1,
+        "version": 2,
         "internalName": "DiziKorea",
         "description": "DiziKorea - Kore, \u00c7in, Japon, Tayland, Tayvan, Filipin dizi ve filmleri T\u00fcrk\u00e7e altyaz\u0131l\u0131 izleme.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziKorea.cs3",
@@ -167,10 +167,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=dizimom.food&sz=%size%",
-        "fileHash": "sha256-8ef3294ef1cd866f92b7c7f04854f0adff56db99c4570c1fb23c865e5cae8b28",
+        "fileHash": "sha256-f146367837f5d6d498437a7d747a771847576bd94502478a633673b6708c76bd",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 21838,
+        "fileSize": 21839,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -179,7 +179,7 @@
         "tvTypes": [
             "TvSeries"
         ],
-        "version": 1,
+        "version": 2,
         "internalName": "DiziMom",
         "description": "DiziMom - binlerce yerli/yabanc\u0131 dizi ar\u015fivi, reklams\u0131z izleme.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziMom.cs3",
@@ -270,7 +270,7 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=filmmakinesi.to&sz=%size%",
-        "fileHash": "sha256-e0a71c49cdb68b3e575d1ef500f8625248f355b21ebf2b575a3d9172996a5f58",
+        "fileHash": "sha256-1c5497dbecc83cfee5a1a1a7a0f3199800375f143706836ff4fc3d441327c2c3",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
         "fileSize": 16678,
@@ -282,7 +282,7 @@
         "tvTypes": [
             "Movie"
         ],
-        "version": 1,
+        "version": 2,
         "internalName": "FilmMakinesi",
         "description": "FilmMakinesi - reklams\u0131z, h\u0131zl\u0131 film izleme.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/FilmMakinesi.cs3",
@@ -331,10 +331,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=hdfilmcehennemi.nl&sz=%size%",
-        "fileHash": "sha256-5b618edf4110075efa5bf4519c4233b8667d891bdbce3bf298f956dfbfaabcd7",
+        "fileHash": "sha256-8edc389ab6a74aa8db8e300233bf7185a12286337c7421a251bdc84365f46552",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 27761,
+        "fileSize": 27762,
         "status": 1,
         "language": "tr",
         "authors": [
@@ -344,7 +344,7 @@
             "Movie",
             "TvSeries"
         ],
-        "version": 1,
+        "version": 2,
         "internalName": "HDFilmCehennemi",
         "description": "HDFilmCehennemi - reklams\u0131z, h\u0131zl\u0131 film ve dizi izleme.",
         "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/HDFilmCehennemi.cs3",
