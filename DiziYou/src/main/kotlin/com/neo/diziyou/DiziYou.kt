@@ -111,11 +111,18 @@ class DiziYou : MainAPI() {
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
         Log.d("DZY", "data » $data")
-        val document = app.get(data).document
+        val response = app.get(data)
+        val document = response.document
+        val rawHtml  = response.text
 
-        val playerSrc = document.selectFirst("iframe#diziyouPlayer")?.attr("src") ?: return false
-        val itemId    = playerSrc.substringAfterLast("/").substringBefore(".html")
-        if (itemId.isBlank()) return false
+        // Site guncellemesiyle player artik "iframe#diziyouPlayer" degil, "/player/<id>.html"
+        // seklinde bir link/buton olarak geliyor olabilir. Once eski (iframe) yontemi, olmazsa
+        // ham HTML uzerinde regex ile /player/<id>.html deseni denenir.
+        val itemId = document.selectFirst("iframe#diziyouPlayer")?.attr("src")
+            ?.substringAfterLast("/")?.substringBefore(".html")
+            ?.takeIf { it.isNotBlank() }
+            ?: Regex("""/player/(\d+)\.html""").find(rawHtml)?.groupValues?.get(1)
+            ?: return false
         Log.d("DZY", "itemId » $itemId")
 
         val storage = mainUrl.replace("www", "storage")
