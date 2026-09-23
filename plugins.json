@@ -269,6 +269,26 @@
         "name": "DiziYou"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=www.dizizon.com&sz=%size%",
+        "fileHash": "sha256-c1d508aa41cb7c65f07d1984fd24fc3948a1eeb66df3dba1213a28cdd8312abd",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 12831,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries"
+        ],
+        "version": 1,
+        "internalName": "DizizOn",
+        "description": "DizizOn - Yabanc\u0131 dizileri online full HD kalitesinde izleyin.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DizizOn.cs3",
+        "name": "DizizOn"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=filmmakinesi.to&sz=%size%",
         "fileHash": "sha256-1c5497dbecc83cfee5a1a1a7a0f3199800375f143706836ff4fc3d441327c2c3",
         "apiVersion": 1,
