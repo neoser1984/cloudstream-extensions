@@ -1,7 +1,6 @@
 package com.neo.dizizon
 
 import android.util.Log
-import org.jsoup.nodes.Element
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.newExtractorLink
@@ -16,22 +15,23 @@ class DizizOn : MainAPI() {
     override val supportedTypes       = setOf(TvType.TvSeries)
 
     override val mainPage = mainPageOf(
-        "${mainUrl}/arsiv"  to "Tüm Diziler",
+        "${mainUrl}/"      to "Son Eklenen Bölümler",
     )
 
+    // Ana sayfa: son eklenen bölümlerin dizi linklerini çek
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val document = app.get(request.data).document
 
-        val home = document.select("a[href*='/dizi/']").mapNotNull { el ->
+        val home = document.select("a[href*='/dizi/'][href*='/bolum']").mapNotNull { el ->
             val href  = fixUrlNull(el.attr("href")) ?: return@mapNotNull null
-            if (!href.contains("/dizi/") || href.contains("/bolum")) return@mapNotNull null
-            val title = el.attr("title")?.replace(" izle", "")?.trim()
-                ?: el.selectFirst("span.title")?.text()?.trim()
-                ?: el.text().trim()
-            if (title.isBlank() || title.length < 2) return@mapNotNull null
+            // Bölüm linkinden dizi linkini türet: /dizi/slug/sezon-X/bolum-Y -> /dizi/slug
+            val diziHref = Regex("""(/dizi/[^/]+)""").find(href)?.groupValues?.get(1)
+                ?.let { "${mainUrl}${it}" } ?: return@mapNotNull null
+            val title = el.selectFirst("span.title")?.text()?.trim() ?: return@mapNotNull null
+            val subtitle = el.selectFirst("span.alt-title")?.text()?.trim() ?: ""
             val poster = fixUrlNull(el.selectFirst("img")?.attr("src"))
 
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
+            newTvSeriesSearchResponse("$title - $subtitle", diziHref, TvType.TvSeries) {
                 this.posterUrl = poster
             }
         }.distinctBy { it.url }
@@ -40,20 +40,18 @@ class DizizOn : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val document = app.get("${mainUrl}/arsiv?q=${query}").document
+        // DizizOn arama: /arsiv sayfasındaki tüm dizi linkleri arasında filtrele
+        val document = app.get("${mainUrl}/arsiv").document
 
         return document.select("a[href*='/dizi/']").mapNotNull { el ->
             val href  = fixUrlNull(el.attr("href")) ?: return@mapNotNull null
-            if (!href.contains("/dizi/") || href.contains("/bolum")) return@mapNotNull null
+            if (href.contains("/bolum") || href.contains("/sezon")) return@mapNotNull null
             val title = el.attr("title")?.replace(" izle", "")?.trim()
-                ?: el.selectFirst("span.title")?.text()?.trim()
                 ?: el.text().trim()
             if (title.isBlank() || title.length < 2) return@mapNotNull null
-            val poster = fixUrlNull(el.selectFirst("img")?.attr("src"))
+            if (!title.contains(query, ignoreCase = true)) return@mapNotNull null
 
-            newTvSeriesSearchResponse(title, href, TvType.TvSeries) {
-                this.posterUrl = poster
-            }
+            newTvSeriesSearchResponse(title, href, TvType.TvSeries)
         }.distinctBy { it.url }
     }
 
@@ -63,20 +61,15 @@ class DizizOn : MainAPI() {
         val title = document.selectFirst("h1")?.text()?.trim() ?: return null
         val poster = fixUrlNull(
             document.selectFirst("img[src*='_cover.png']")?.attr("src")
-                ?: document.selectFirst("img[src*='_poster.png']")?.attr("src")
+                ?: document.selectFirst("meta[property='og:image']")?.attr("content")
         )
-        val description = document.selectFirst("p")?.text()?.takeIf { it.length > 30 }
-        val year = Regex("""(\d{4})""").find(
-            document.selectFirst(".year, .yapim-yili")?.text() ?: ""
-        )?.groupValues?.get(1)?.toIntOrNull()
-        val tags = document.select("a[href*='/tur/'], a[href*='/kategori/']").map { it.text().trim() }
+        val description = document.selectFirst("meta[property='og:description']")?.attr("content")
+            ?: document.selectFirst("meta[name='description']")?.attr("content")
 
         val episodes = document.select("a.episode").mapNotNull { el ->
             val epHref = fixUrlNull(el.attr("href")) ?: return@mapNotNull null
             val epText = el.text().trim()
             val epNum  = Regex("""(\d+)\.\s*Bölüm""").find(epText)?.groupValues?.get(1)?.toIntOrNull()
-
-            // Sezon numarasını URL'den çıkar
             val seasonNum = Regex("""/sezon-(\d+)/""").find(epHref)?.groupValues?.get(1)?.toIntOrNull() ?: 1
 
             newEpisode(epHref) {
@@ -88,16 +81,11 @@ class DizizOn : MainAPI() {
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
             this.posterUrl = poster
-            this.year      = year
             this.plot      = description
-            this.tags      = tags
         }
     }
 
-    // ! DizizOn'un player'ı JS ile dinamik yükleniyor (iframe#episode_player boş geliyor,
-    // ! "Videoyu Başlat" tıklanınca client-side JS ile dolduruluyor). CloudStream'in Jsoup/OkHttp
-    // ! mimarisi JS çalıştıramadığı için şu an video linki çıkarılamıyor.
-    // ! İleride network analizi ile API endpoint'i bulunursa burası güncellenecek.
+    // Video player JS ile dinamik yükleniyor - en iyi çaba ile dene
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -107,7 +95,17 @@ class DizizOn : MainAPI() {
         Log.d("DZZN", "data » $data")
         val document = app.get(data).document
 
-        // iframe#episode_player src'si JS ile dolduruluyor, statik HTML'de boş
+        // 1. meta-og:video tag'ından player URL
+        val ogVideo = document.selectFirst("meta[property='og:video']")?.attr("content")
+            ?: document.selectFirst("meta[property='og:video:secure_url']")?.attr("content")
+
+        if (ogVideo != null && ogVideo.isNotBlank()) {
+            Log.d("DZZN", "og:video » $ogVideo")
+            loadExtractor(ogVideo, "${mainUrl}/", subtitleCallback, callback)
+            return true
+        }
+
+        // 2. iframe#episode_player
         val iframeSrc = document.selectFirst("iframe#episode_player")?.attr("src")
             ?.takeIf { it.isNotBlank() && it != "about:blank" }
 
@@ -117,7 +115,7 @@ class DizizOn : MainAPI() {
             return true
         }
 
-        // Yedek: sayfada gömülü m3u8/mp4 linki arama
+        // 3. Sayfada gömülü m3u8/mp4
         val pageHtml = document.html()
         val m3u8 = Regex("""(https?://[^\s"']+\.m3u8[^\s"']*)""").find(pageHtml)?.groupValues?.get(1)
         val mp4  = Regex("""(https?://[^\s"']+\.mp4[^\s"']*)""").find(pageHtml)?.groupValues?.get(1)
@@ -138,7 +136,7 @@ class DizizOn : MainAPI() {
             return true
         }
 
-        Log.d("DZZN", "video linki bulunamadı - player JS ile dinamik yükleniyor")
+        Log.d("DZZN", "video linki bulunamadı")
         return false
     }
 }
