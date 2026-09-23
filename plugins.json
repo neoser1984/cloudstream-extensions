@@ -228,6 +228,27 @@
         "name": "DiziPal2121"
     },
     {
+        "iconUrl": "https://www.google.com/s2/favicons?domain=dizipalorjinal9.com&sz=%size%",
+        "fileHash": "sha256-13ccd20d841b9ed53a7d17b6e8784668210cd64f8e96df02218269cf5416cce6",
+        "apiVersion": 1,
+        "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
+        "fileSize": 16979,
+        "status": 1,
+        "language": "tr",
+        "authors": [
+            "NeO"
+        ],
+        "tvTypes": [
+            "TvSeries",
+            "Movie"
+        ],
+        "version": 1,
+        "internalName": "DiziPalOrjinal",
+        "description": "DiziPal Orjinal - T\u00fcrk\u00e7e dublaj ve altyaz\u0131l\u0131 filmler ve diziler.",
+        "url": "https://raw.githubusercontent.com/neoser1984/cloudstream-extensions/builds/DiziPalOrjinal.cs3",
+        "name": "DiziPalOrjinal"
+    },
+    {
         "iconUrl": "https://www.google.com/s2/favicons?domain=diziyo.so&sz=%size%",
         "fileHash": "sha256-328a4cd2428dee121cffa664d622a7a0d675dbf71831894c16a014678f616b66",
         "apiVersion": 1,
@@ -270,10 +291,10 @@
     },
     {
         "iconUrl": "https://www.google.com/s2/favicons?domain=www.dizizon.com&sz=%size%",
-        "fileHash": "sha256-c1d508aa41cb7c65f07d1984fd24fc3948a1eeb66df3dba1213a28cdd8312abd",
+        "fileHash": "sha256-563cc550da75ab5710790d99f357665f37c6016cadf3c7a513592aae940061ac",
         "apiVersion": 1,
         "repositoryUrl": "https://github.com/neoser1984/cloudstream-extensions",
-        "fileSize": 12831,
+        "fileSize": 12518,
         "status": 1,
         "language": "tr",
         "authors": [
